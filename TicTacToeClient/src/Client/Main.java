@@ -32,14 +32,17 @@ import java.io.IOException;
  * @author LukeMcNemee
  */
 public class Main {
+    private static String[][] gameBoard;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, InterruptedException {
+      
         ClientImpl cl = new ClientImpl();
 
         cl.connect("127.0.0.1", 3248);
+        
         int i = 0;
         System.out.println("my color is: " + cl.getColor());
         while (cl.getStatus().equals(State.PLAY) || cl.getStatus().equals(State.WAIT)) {
@@ -61,6 +64,10 @@ public class Main {
         System.out.println(cl.getStatus());
 
         //scl.disconnect();
+        
+        ClientImpl cl = new ClientImpl();
+        GameField gameField = new GameField(cl);
+        
     }
 
 }
