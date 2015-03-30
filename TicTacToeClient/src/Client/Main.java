@@ -35,24 +35,25 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-        System.out.println("STARTING");
-        System.out.println("Loading CLIENT");
+        System.out.println("STARTING:");
+        System.out.println("    Loading CLIENT...");
         Client client = new ClientImpl();
-        System.out.println("CONNECTING");
+        System.out.println("    CONNECTING...");
         client.connect("127.0.0.1", 3248);
-        System.out.println("Loading GAME_FIELD");
+        System.out.println("    Loading GAME_FIELD...");
         IGameField gameField = new GameField(client);
-        System.out.println("Loading GAME_PLAYER");
+        System.out.println("    Loading GAME_PLAYER...");
         IGamePlayer gamePlayer = new GamePlayer(client, gameField);
-        System.out.println("Secesfully STARTED");
+        System.out.println("    Secesfully STARTED");
         System.out.println("My color is: " + gamePlayer.getColor());
         State status = client.getStatus();
         while (status.equals(State.WAIT) || status.equals(State.PLAY)) {
-            Thread.sleep(10);
+            Thread.sleep(1000);
             status = client.getStatus();
-            if (status.equals(State.PLAY)) {
+            if (status.equals(State.PLAY))
                 gamePlayer.playTurn();
-            }
+            else
+                System.out.println("Waiting...");
         }
 
         System.out.println("I am " + (status == State.WIN ? "WINNER" : "LOOSER"));

@@ -17,7 +17,7 @@ public class Solver {
     private List<Point> availablePoints;
     private final int[][] board;
     private List<PointsAndScores> rootsChildrenScores;
-    protected int winLength = 5;
+    private final int winLength = 3, maxDepth = Integer.MAX_VALUE;///4;
 
     public Solver(int[][] board) {
         this.board = board;
@@ -54,10 +54,12 @@ public class Solver {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (won(new Point(i, j), 1, 0, player) || won(new Point(i, j), 0, 1, player) || won(new Point(i, j), 1, 1, player)) {
+                    //System.out.println(player + ". true");
                     return true;
                 }
             }
         }
+        //System.out.println(player + ". false");
         return false;
     }
 
@@ -115,13 +117,24 @@ public class Solver {
         return list.get(index);
     }
 
+    public void printField() {
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board[x].length; y++) {
+                System.out.print(board[x][y] + " ");
+            }
+            System.out.println("");
+        }
+    }
+    
     public void callMinimax() {
         rootsChildrenScores = new ArrayList<>();
         minimax(0, 1);
     }
 
     public int minimax(int depth, int turn) {
-
+        //System.out.println("Depth: " + depth + " Turn: " + turn);
+        //printField();
+        
         if (hasWon(1)) {
             return +1;
         }
@@ -131,6 +144,7 @@ public class Solver {
 
         List<Point> pointsAvailable = getAvailableStates();
         if (pointsAvailable.isEmpty()) {
+            //System.out.println("EMPTY");
             return 0;
         }
 
@@ -141,16 +155,17 @@ public class Solver {
 
             if (turn == 1) { //X's turn select the highest from below minimax() call
                 placeAMove(point, 1);
-                int currentScore = minimax(depth + 1, 2);
+                int currentScore = depth < maxDepth ? minimax(depth + 1, 2) : 0;
                 scores.add(currentScore);
 
                 if (depth == 0) {
+                    System.out.println("rootsChildrenScores.add(currentScore: " + currentScore + ", point: " + point + ")");
                     rootsChildrenScores.add(new PointsAndScores(currentScore, point));
                 }
 
             } else if (turn == 2) {//O's turn select the lowest from below minimax() call
                 placeAMove(point, 2);
-                scores.add(minimax(depth + 1, 1));
+                scores.add(depth < maxDepth ? minimax(depth + 1, 1) : 0);
             }
             board[point.x][point.y] = 0; //Reset this point
         }

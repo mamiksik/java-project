@@ -27,9 +27,16 @@ public class GamePlayer implements IGamePlayer {
     @Override
     public void playTurn() throws IOException {
         turnIndex++;
+        System.out.println("PLAYING: ");
+        System.out.println("    Fatching...");
+        gameField.fetchField();
+        System.out.println("    Creating solver...");
         Solver solver = new Solver(gameField.getIntField());
+        System.out.println("    Calculateing minimax...");
         solver.callMinimax();
+        System.out.println("    Getting best move...");
         Point bestMove = solver.returnBestMove();
+        System.out.println("    Playing...");
         client.play(bestMove.x, bestMove.y);
     }
 

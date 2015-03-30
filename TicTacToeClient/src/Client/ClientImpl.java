@@ -54,7 +54,7 @@ public class ClientImpl implements Client{
     public State getStatus() throws IOException{
         outToServer.writeBytes("STATUS"+"\n");
         String response = inFromServer.readLine();
-        System.out.println(response);
+        //System.out.println(response);
         if(response.equals("DEFEAT")){
             return State.DEFEAT;
         }
@@ -74,15 +74,15 @@ public class ClientImpl implements Client{
     public int getSize() throws IOException{
         outToServer.writeBytes("SIZE"+"\n");
         String response = inFromServer.readLine();
-        System.out.println(response);
-        return Integer.getInteger(response);
+        //System.out.println(response);
+        return Integer.parseInt(response);
     }
 
     @Override
     public char getColor() throws IOException{
         outToServer.writeBytes("COLOR"+"\n");
         String response = inFromServer.readLine();
-        System.out.println(response);
+        //System.out.println(response);
         return response.charAt(0);
     }
 
@@ -90,12 +90,13 @@ public class ClientImpl implements Client{
     public char getGrid(int x, int y) throws IOException{
         outToServer.writeBytes("GRID "+ x + " " + y  +"\n");
         String response = inFromServer.readLine();
-        System.out.println(response);
+        //System.out.println(response);
         return response.charAt(0);
     }
 
     @Override
     public String play(int x, int y) throws IOException {
+        System.out.println(x + ", " + y);
         outToServer.writeBytes("PLAY "+ x + " " + y  +"\n");
         String response = inFromServer.readLine();
         System.out.println(response);

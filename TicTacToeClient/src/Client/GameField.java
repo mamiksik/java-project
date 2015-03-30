@@ -20,8 +20,8 @@ public final class GameField implements IGameField {
     public GameField(Client client) throws IOException {
         this.client = client;
         size = client.getSize();
-        field = new char[size][size];
         color = client.getColor();
+        field = new char[size][size];
         fetchField();
     }
 
@@ -47,6 +47,7 @@ public final class GameField implements IGameField {
                 field[x][y] = client.getGrid(x, y);
             }
         }
+        printField();
     }
 
     @Override
