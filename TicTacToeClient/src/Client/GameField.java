@@ -69,18 +69,20 @@ public final class GameField implements IGameField {
         }
         return intField;
     }
-    
+
     private int getInt(int x, int y) {
         switch (field[x][y]) {
             case '_':
                 return 0;
             case 'X':
-                if (color == 'X')
+                if (color == 'X') {
                     return 1;
+                }
                 return 2;
             case 'Y':
-                if (color == 'Y')
+                if (color == 'Y') {
                     return 1;
+                }
                 return 2;
         }
         return 0;

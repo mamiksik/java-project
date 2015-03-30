@@ -48,7 +48,7 @@ public class Main {
         System.out.println("My color is: " + gamePlayer.getColor());
         State status = client.getStatus();
         while (status.equals(State.WAIT) || status.equals(State.PLAY)) {
-            Thread.sleep(5);
+            Thread.sleep(10);
             status = client.getStatus();
             if (status.equals(State.PLAY)) {
                 gamePlayer.playTurn();
