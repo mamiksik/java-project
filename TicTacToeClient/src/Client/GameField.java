@@ -10,44 +10,36 @@ import java.io.IOException;
 /**
  * @author Martin
  */
-public class GameField implements IGameField
-{
-   
+public final class GameField implements IGameField {
+
     int size;
     Client client;
     char[][] field;
-    
-    
-    public GameField(Client client) throws IOException 
-    {
+
+    public GameField(Client client) throws IOException {
         this.client = client;
         size = client.getSize();
         field = new char[size][size];
         fetchField();
     }
 
-    
     @Override
-    public char[][] getField() 
-    {
+    public char[][] getField() {
         return field;
     }
 
     @Override
-    public char getArea(int x, int y)
-    {
+    public char getArea(int x, int y) {
         return field[x][y];
     }
 
     @Override
-    public int getSize() 
-    {
+    public int getSize() {
         return size;
     }
 
     @Override
-    public void fetchField() throws IOException
-    {
+    public void fetchField() throws IOException {
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 field[x][y] = client.getGrid(x, y);
@@ -56,14 +48,13 @@ public class GameField implements IGameField
     }
 
     @Override
-    public void print()
-    {
-      for (int x = 0; x < size; x++) {
+    public void printField() {
+        for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                System.out.println(field[x][y]);           
+                System.out.print(field[x][y] + " ");
             }
             System.out.println("");
         }
     }
-  
+
 }

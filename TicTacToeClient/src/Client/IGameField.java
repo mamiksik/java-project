@@ -12,14 +12,14 @@ import java.io.IOException;
  * @author Martin
  */
 public interface IGameField {
-    
+
     public char[][] getField();
-  
+
     public void fetchField() throws IOException;
-    
-    public char getArea(int x, int y);   
+
+    public char getArea(int x, int y);
 
     public int getSize();
-    
-    public void print();
+
+    public void printField();
 }
