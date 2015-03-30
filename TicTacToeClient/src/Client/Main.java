@@ -51,7 +51,7 @@ public class Main {
             Thread.sleep(10);
             status = client.getStatus();
             if (status.equals(State.PLAY)) {
-                gamePlayer.play();
+                gamePlayer.playTurn();
             }
         }
 

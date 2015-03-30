@@ -5,6 +5,8 @@
  */
 package Client;
 
+import java.io.IOException;
+
 /**
  *
  * @author Martin
@@ -15,5 +17,5 @@ public interface IGamePlayer {
 
     public int getTurnIndex();
 
-    public void play();
+    public void playTurn() throws IOException;
 }

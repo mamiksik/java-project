@@ -15,11 +15,13 @@ public final class GameField implements IGameField {
     int size;
     Client client;
     char[][] field;
+    char color;
 
     public GameField(Client client) throws IOException {
         this.client = client;
         size = client.getSize();
         field = new char[size][size];
+        color = client.getColor();
         fetchField();
     }
 
@@ -55,6 +57,33 @@ public final class GameField implements IGameField {
             }
             System.out.println("");
         }
+    }
+
+    @Override
+    public int[][] getIntField() {
+        int[][] intField = new int[size][size];
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                intField[x][y] = getInt(x, y);
+            }
+        }
+        return intField;
+    }
+    
+    private int getInt(int x, int y) {
+        switch (field[x][y]) {
+            case '_':
+                return 0;
+            case 'X':
+                if (color == 'X')
+                    return 1;
+                return 2;
+            case 'Y':
+                if (color == 'Y')
+                    return 1;
+                return 2;
+        }
+        return 0;
     }
 
 }

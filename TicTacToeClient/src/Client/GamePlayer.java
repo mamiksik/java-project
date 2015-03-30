@@ -25,9 +25,12 @@ public class GamePlayer implements IGamePlayer {
     }
 
     @Override
-    public void play() {
+    public void playTurn() throws IOException {
         turnIndex++;
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Solver solver = new Solver(gameField.getIntField());
+        solver.callMinimax();
+        Point bestMove = solver.returnBestMove();
+        client.play(bestMove.x, bestMove.y);
     }
 
     @Override

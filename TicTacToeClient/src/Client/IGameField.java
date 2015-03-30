@@ -14,6 +14,8 @@ import java.io.IOException;
 public interface IGameField {
 
     public char[][] getField();
+    
+    public int[][] getIntField();
 
     public void fetchField() throws IOException;
 
