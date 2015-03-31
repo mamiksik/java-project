@@ -17,6 +17,7 @@ public class Solver {
     private List<Point> availablePoints;
     private final int[][] board;
     private List<PointsAndScores> rootsChildrenScores;
+    private Point computersMove;
     private final int winLength = 3, maxDepth = Integer.MAX_VALUE;///4;
 
     public Solver(int[][] board) {
@@ -120,12 +121,12 @@ public class Solver {
     public void printField() {
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[x].length; y++) {
-                System.out.print(board[x][y] + " ");
+                System.out.print(board[y][x] + " ");
             }
             System.out.println("");
         }
     }
-    
+
     public void callMinimax() {
         rootsChildrenScores = new ArrayList<>();
         minimax(0, 1);
@@ -134,7 +135,7 @@ public class Solver {
     public int minimax(int depth, int turn) {
         //System.out.println("Depth: " + depth + " Turn: " + turn);
         //printField();
-        
+
         if (hasWon(1)) {
             return +1;
         }
@@ -170,5 +171,62 @@ public class Solver {
             board[point.x][point.y] = 0; //Reset this point
         }
         return turn == 1 ? returnMax(scores) : returnMin(scores);
+    }
+
+    public Point getMove() {
+        return computersMove;
+    }
+
+    public int minimaxV2(int depth, int turn) {
+        if (hasWon(1)) {
+            return +1;
+        }
+        if (hasWon(2)) {
+            return -1;
+        }
+
+        List<Point> pointsAvailable = getAvailableStates();
+        if (pointsAvailable.isEmpty()) {
+            return 0;
+        }
+
+        int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+
+        for (int i = 0; i < pointsAvailable.size(); ++i) {
+            Point point = pointsAvailable.get(i);
+            if (turn == 1) {
+                placeAMove(point, 1);
+                int currentScore = minimax(depth + 1, 2);
+                max = Math.max(currentScore, max);
+
+                if (depth == 0) {
+                    System.out.println("Score for position " + (i + 1) + " = " + currentScore);
+                }
+                if (currentScore >= 0) {
+                    if (depth == 0) {
+                        computersMove = point;
+                    }
+                }
+                if (currentScore == 1) {
+                    board[point.x][point.y] = 0;
+                    break;
+                }
+                if (i == pointsAvailable.size() - 1 && max < 0) {
+                    if (depth == 0) {
+                        computersMove = point;
+                    }
+                }
+            } else if (turn == 2) {
+                placeAMove(point, 2);
+                int currentScore = minimax(depth + 1, 1);
+                min = Math.min(currentScore, min);
+                if (min == -1) {
+                    board[point.x][point.y] = 0;
+                    break;
+                }
+            }
+            board[point.x][point.y] = 0; //Reset this point
+        }
+        return turn == 1 ? max : min;
     }
 }

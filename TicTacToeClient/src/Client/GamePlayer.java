@@ -33,9 +33,9 @@ public class GamePlayer implements IGamePlayer {
         System.out.println("    Creating solver...");
         Solver solver = new Solver(gameField.getIntField());
         System.out.println("    Calculateing minimax...");
-        solver.callMinimax();
+        solver.minimaxV2(0, 1);
         System.out.println("    Getting best move...");
-        Point bestMove = solver.returnBestMove();
+        Point bestMove = solver.getMove();
         System.out.println("    Playing...");
         client.play(bestMove.x, bestMove.y);
     }
