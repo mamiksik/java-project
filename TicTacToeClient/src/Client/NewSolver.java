@@ -7,13 +7,15 @@ package Client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 /**
  *
  * @author anty
  */
 public class NewSolver implements IGameSolver {
-
+    Random random = new Random();
     IGameField gameField;
     Point move;
     char color;
@@ -35,7 +37,8 @@ public class NewSolver implements IGameSolver {
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[x].length; y++) {
                 if (board[x][y] == player) {
-                    if (won(new Point(x, y), board, 1, 0, player) >= winLength || won(new Point(x, y), board, 0, 1, player) >= winLength || won(new Point(x, y), board, 1, 1, player) >= winLength) {
+                    if (won(new Point(x, y), board, 1, 0, player) >= winLength || won(new Point(x, y), board, 0, 1, player) >= winLength
+                            || won(new Point(x, y), board, 1, 1, player) >= winLength || won(new Point(x, y), board, -1, 1, player) >= winLength) {
                         return true;
                     }
                 }
@@ -111,17 +114,44 @@ public class NewSolver implements IGameSolver {
 
     private Point checkAllStates() {
         List<Point> availablePoints = getAvailableStates();
-        List<Integer> availableScores = new ArrayList<>();
+        List<Float> availableScores = new ArrayList<>();
         for (Point anAvailablePoint : availablePoints) {
             availableScores.add(checkPoint(anAvailablePoint));
         }
-        return availablePoints.get(getMaxIndex(availableScores));
+        
+        List<Integer> indexes = getMaxIndexes(availableScores);
+        return availablePoints.get(indexes.get(random.nextInt(indexes.size())));
     }
 
-    private int checkPoint(Point point) {
+    private float checkPoint(Point point) {
         char revColor = getRevertedColor(color);
-        return (int)((won(point, gameField.getField(), 1, 0, color) + won(point, gameField.getField(), 0, 1, color) + won(point, gameField.getField(), 1, 1, color)) + 
-                (won(point, gameField.getField(), 1, 0, revColor) + won(point, gameField.getField(), 0, 1, revColor) + won(point, gameField.getField(), 1, 1, revColor)) / 2d);
+        if (won(point, gameField.getField(), 1, 0, color) >= winLength || won(point, gameField.getField(), 0, 1, color) >= winLength
+                || won(point, gameField.getField(), 1, 1, color) >= winLength || won(point, gameField.getField(), -1, 1, color) >= winLength)
+            return Float.MAX_VALUE;
+        
+        if (won(point, gameField.getField(), 1, 0, revColor) >= winLength || won(point, gameField.getField(), 0, 1, revColor) >= winLength
+                || won(point, gameField.getField(), 1, 1, revColor) >= winLength || won(point, gameField.getField(), -1, 1, revColor) >= winLength)
+            return Float.MAX_VALUE / 1.5f;
+        
+        if (won(point, gameField.getField(), 1, 0, revColor) >= winLength - 1 || won(point, gameField.getField(), 0, 1, revColor) >= winLength - 1
+                || won(point, gameField.getField(), 1, 1, revColor) >= winLength - 1 || won(point, gameField.getField(), -1, 1, revColor) >= winLength - 1)
+            return Float.MAX_VALUE / 2f;
+        
+        List<Float> lengths = new ArrayList<>();
+        lengths.add((float)won(point, gameField.getField(), 1, 0, color));
+        lengths.add((float)won(point, gameField.getField(), 0, 1, color));
+        lengths.add((float)won(point, gameField.getField(), 1, 1, color));
+        lengths.add((float)won(point, gameField.getField(), -1, 1, color));
+        int index = getMaxIndex(lengths);
+        
+        List<Float> revLengths = new ArrayList<>();
+        revLengths.add((float)won(point, gameField.getField(), 1, 0, revColor));
+        revLengths.add((float)won(point, gameField.getField(), 0, 1, revColor));
+        revLengths.add((float)won(point, gameField.getField(), 1, 1, revColor));
+        revLengths.add((float)won(point, gameField.getField(), -1, 1, revColor));
+        int revIndex = getMaxIndex(revLengths);
+        
+        return (float)lengths.get(index) + ((float)revLengths.get(revIndex) / (float)winLength);
     }
     
     private char getRevertedColor(char color) {
@@ -135,10 +165,25 @@ public class NewSolver implements IGameSolver {
         }
     }
 
-    private int getMaxIndex(List<Integer> availableScores) {
+    private List<Integer> getMaxIndexes(List<Float> list) {
+        List<Integer> index = new ArrayList<>();
+        index.add(0);
+        for (int i = 0; i < list.size(); i++) {
+            if (Objects.equals(list.get(i), list.get(index.get(0)))) {
+                index.add(i);
+            }
+            if (list.get(i) > list.get(index.get(0))) {
+                index.clear();
+                index.add(i);
+            }
+        }
+        return index;
+    }
+    
+    private int getMaxIndex(List<Float> list) {
         int index = 0;
-        for (int i = 0; i < availableScores.size(); i++) {
-            if (availableScores.get(i) > availableScores.get(index)) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) > list.get(index)) {
                 index = i;
             }
         }

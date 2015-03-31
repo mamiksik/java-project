@@ -11,7 +11,6 @@ import java.io.IOException;
  * @author Martin
  */
 public final class GameField implements IGameField {
-
     int size;
     Client client;
     char[][] field;

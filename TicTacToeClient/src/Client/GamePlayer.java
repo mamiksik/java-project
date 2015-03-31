@@ -12,7 +12,6 @@ import java.io.IOException;
  * @author Martin
  */
 public class GamePlayer implements IGamePlayer {
-
     Client client;
     IGameField gameField;
     IGameSolver solver;
