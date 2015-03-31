@@ -22,9 +22,9 @@ public class GamePlayer implements IGamePlayer {
     public GamePlayer(Client client, IGameField gameField) throws IOException {
         this.client = client;
         this.gameField = gameField;
-        this.solver = new NewSolver(gameField);
-        //this.solver = new OldSolver(gameField.getIntField());
         this.color = client.getColor();
+        this.solver = new NewSolver(gameField, color);
+        //this.solver = new OldSolver(gameField.getIntField());
     }
 
     @Override

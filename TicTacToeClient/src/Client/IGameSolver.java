@@ -13,9 +13,9 @@ public interface IGameSolver {
     
     public boolean isGameOver();
     
-    public boolean hasWon(int player);
+    public boolean hasWon(char player);
     
-    public void updateGameField(IGameField gameField);
+    public void setGameField(IGameField gameField);
     
     public Point getBestMove();
     

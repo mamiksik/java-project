@@ -33,23 +33,10 @@ public class Main {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-        /*int[][] board = {{1, 0, 1, 1}, {0, 0, 0, 0}, {2, 0, 2, 2}, {0, 0, 0, 0}};
-         for (int i = 0; i < 10; i++) {
-         System.out.println("    Creating solver...");
-         OldSolver solver = new OldSolver(board);
-         solver.printField();
-         System.out.println("    Calculateing minimax...");
-         solver.minimaxV2(0, 1);
-         System.out.println("    Getting best move...");
-         Point bestMove = solver.getMove();
-         System.out.println("    Playing...");
-         System.out.println(bestMove);
-         if (bestMove != null)
-         board[bestMove.x][bestMove.y] = 1;
-         }*/
-
         System.out.println("STARTING:");
         System.out.println("    Loading CLIENT...");
         Client client = new ClientImpl();

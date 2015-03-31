@@ -27,7 +27,7 @@ public class OldSolver implements IGameSolver {
     @Override
     public boolean isGameOver() {
         //Game is over is someone has won, or board is full (draw)
-        return (hasWon(1) || hasWon(2) || getAvailableStates().isEmpty());
+        return (hasWon('X') || hasWon('O') || getAvailableStates().isEmpty());
     }
 
     private boolean won(Point startPosition, int xm, int ym, int player) {
@@ -55,7 +55,8 @@ public class OldSolver implements IGameSolver {
     }
 
     @Override
-    public boolean hasWon(int player) { // X = 1; O = 2;
+    public boolean hasWon(char player2) { // X = 1; O = 2;
+        int player = player2 == 'X' ? 1 : 2;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (won(new Point(i, j), 1, 0, player) || won(new Point(i, j), 0, 1, player) || won(new Point(i, j), 1, 1, player)) {
@@ -148,10 +149,10 @@ public class OldSolver implements IGameSolver {
         //System.out.println("Depth: " + depth + " Turn: " + turn);
         //printField();
 
-        if (hasWon(1)) {
+        if (hasWon('X')) {
             return +1;
         }
-        if (hasWon(2)) {
+        if (hasWon('O')) {
             return -1;
         }
 
@@ -203,10 +204,10 @@ public class OldSolver implements IGameSolver {
         if (depth >= maxDepth) {
             return 0;
         }
-        if (hasWon(1)) {
+        if (hasWon('X')) {
             return +1;
         }
-        if (hasWon(2)) {
+        if (hasWon('O')) {
             return -1;
         }
 
@@ -258,7 +259,7 @@ public class OldSolver implements IGameSolver {
     }
 
     @Override
-    public void updateGameField(IGameField gameField) {
+    public void setGameField(IGameField gameField) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
