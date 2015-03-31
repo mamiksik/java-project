@@ -24,4 +24,6 @@ public interface IGameField {
     public int getSize();
 
     public void printField();
+    
+    public boolean isFullFree();
 }

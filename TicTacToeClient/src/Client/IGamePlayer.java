@@ -17,5 +17,5 @@ public interface IGamePlayer {
 
     public int getTurnIndex();
 
-    public void playTurn() throws IOException;
+    public boolean playTurn() throws IOException;
 }

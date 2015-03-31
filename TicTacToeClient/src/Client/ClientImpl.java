@@ -95,12 +95,12 @@ public class ClientImpl implements Client{
     }
 
     @Override
-    public String play(int x, int y) throws IOException {
+    public int play(int x, int y) throws IOException {
         System.out.println(x + ", " + y);
         outToServer.writeBytes("PLAY "+ x + " " + y  +"\n");
         String response = inFromServer.readLine();
         System.out.println(response);
-        return response;
+        return Integer.parseInt(response);
     }
     
 }

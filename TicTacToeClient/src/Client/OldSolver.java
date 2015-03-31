@@ -12,18 +12,19 @@ import java.util.List;
  *
  * @author anty
  */
-public class Solver {
+public class OldSolver implements IGameSolver {
 
     private List<Point> availablePoints;
     private final int[][] board;
     private List<PointsAndScores> rootsChildrenScores;
     private Point computersMove;
-    private final int winLength = 3, maxDepth = Integer.MAX_VALUE;///4;
+    private final int winLength = 3, maxDepth = 10;///4;
 
-    public Solver(int[][] board) {
+    public OldSolver(int[][] board) {
         this.board = board;
     }
 
+    @Override
     public boolean isGameOver() {
         //Game is over is someone has won, or board is full (draw)
         return (hasWon(1) || hasWon(2) || getAvailableStates().isEmpty());
@@ -33,31 +34,35 @@ public class Solver {
         if (board[startPosition.x][startPosition.y] != player) {
             return false;
         }
-
+        //int len = wonWhile(startPosition, xm, ym, player) + wonWhile(startPosition, -xm, -ym, player) + 1;
+        //System.out.println(player + ". LEN: " + len);
         return wonWhile(startPosition, xm, ym, player) + wonWhile(startPosition, -xm, -ym, player) + 1 >= winLength;
     }
 
     private int wonWhile(Point startPosition, int xm, int ym, int player) {
-        int x = startPosition.x, y = startPosition.y, len = 0;
-        while (x > 0 && y > 0 && x < board.length - 1 && y < board[x].length - 1) {
-            x = x + xm;
-            y = y + ym;
+        int x = startPosition.x + xm, y = startPosition.y + ym, len = 0;
+        while (x >= 0 && y >= 0 && x < board.length && y < board[x].length) {
             if (board[x][y] == player) {
                 len++;
             } else {
                 break;
             }
+            x += xm;
+            y += ym;
         }
+        //System.out.println(player + ". Sx: " + startPosition.x + ", Sy: " + startPosition.y + ", x: " + x + ", y: " + y + ", xm: " + xm + ", ym: " + ym + ", LEN: " + len);
         return len;
     }
 
+    @Override
     public boolean hasWon(int player) { // X = 1; O = 2;
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (won(new Point(i, j), 1, 0, player) || won(new Point(i, j), 0, 1, player) || won(new Point(i, j), 1, 1, player)) {
-                    //System.out.println(player + ". true");
+                    //System.out.println(player + ". " + i + ", " + j + ": true");
                     return true;
                 }
+                //System.out.println(player + ". " + i + ", " + j + ": false");
             }
         }
         //System.out.println(player + ". false");
@@ -80,7 +85,7 @@ public class Solver {
         board[point.x][point.y] = player;   //player = 1 for X, 2 for O
     }
 
-    public Point returnBestMove() {
+    private Point returnBestMove() {
         int MAX = rootsChildrenScores.get(0).score;
         int best = 0;
 
@@ -121,18 +126,25 @@ public class Solver {
     public void printField() {
         for (int x = 0; x < board.length; x++) {
             for (int y = 0; y < board[x].length; y++) {
+                System.out.print(y + "" + x + " ");
+            }
+            System.out.println();
+        }
+
+        for (int x = 0; x < board.length; x++) {
+            for (int y = 0; y < board[x].length; y++) {
                 System.out.print(board[y][x] + " ");
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
-    public void callMinimax() {
+    private void callMinimax() {
         rootsChildrenScores = new ArrayList<>();
         minimax(0, 1);
     }
 
-    public int minimax(int depth, int turn) {
+    private int minimax(int depth, int turn) {
         //System.out.println("Depth: " + depth + " Turn: " + turn);
         //printField();
 
@@ -173,11 +185,24 @@ public class Solver {
         return turn == 1 ? returnMax(scores) : returnMin(scores);
     }
 
-    public Point getMove() {
+    @Override
+    public Point getBestMove() {
         return computersMove;
     }
 
-    public int minimaxV2(int depth, int turn) {
+    @Override
+    public boolean solve() {
+        computersMove = null;
+        minimaxV2(0, 1);
+        return computersMove != null;
+    }
+    
+    private int minimaxV2(int depth, int turn) {
+        //System.out.println("Depth: " + depth + ", Turn: " + turn);
+
+        if (depth >= maxDepth) {
+            return 0;
+        }
         if (hasWon(1)) {
             return +1;
         }
@@ -186,6 +211,7 @@ public class Solver {
         }
 
         List<Point> pointsAvailable = getAvailableStates();
+        //System.out.println("Available: " + pointsAvailable.size());
         if (pointsAvailable.isEmpty()) {
             return 0;
         }
@@ -194,9 +220,10 @@ public class Solver {
 
         for (int i = 0; i < pointsAvailable.size(); ++i) {
             Point point = pointsAvailable.get(i);
+            //System.out.println("Index: " + i + ", Point: " + point);
             if (turn == 1) {
                 placeAMove(point, 1);
-                int currentScore = minimax(depth + 1, 2);
+                int currentScore = minimaxV2(depth + 1, 2);
                 max = Math.max(currentScore, max);
 
                 if (depth == 0) {
@@ -218,7 +245,7 @@ public class Solver {
                 }
             } else if (turn == 2) {
                 placeAMove(point, 2);
-                int currentScore = minimax(depth + 1, 1);
+                int currentScore = minimaxV2(depth + 1, 1);
                 min = Math.min(currentScore, min);
                 if (min == -1) {
                     board[point.x][point.y] = 0;
@@ -228,5 +255,10 @@ public class Solver {
             board[point.x][point.y] = 0; //Reset this point
         }
         return turn == 1 ? max : min;
+    }
+
+    @Override
+    public void updateGameField(IGameField gameField) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

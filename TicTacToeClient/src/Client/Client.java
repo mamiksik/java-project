@@ -88,5 +88,5 @@ public interface Client {
      *  -3 = špatné souřadnice, již hrané pole
      * @throws IOException 
      */
-    public String play(int x, int y) throws IOException;
+    public int play(int x, int y) throws IOException;
 }

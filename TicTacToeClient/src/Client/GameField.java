@@ -56,7 +56,7 @@ public final class GameField implements IGameField {
             for (int y = 0; y < size; y++) {
                 System.out.print(field[y][x] + " ");
             }
-            System.out.println("");
+            System.out.println();
         }
     }
 
@@ -80,13 +80,25 @@ public final class GameField implements IGameField {
                     return 1;
                 }
                 return 2;
-            case 'Y':
-                if (color == 'Y') {
+            case 'O':
+                if (color == 'O') {
                     return 1;
                 }
                 return 2;
         }
         return 0;
+    }
+
+    @Override
+    public boolean isFullFree() {
+        for (char[] fieldx : field) {
+            for (char fieldy : fieldx) {
+                if (fieldy != '_') {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
