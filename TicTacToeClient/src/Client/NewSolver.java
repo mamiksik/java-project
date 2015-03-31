@@ -119,7 +119,20 @@ public class NewSolver implements IGameSolver {
     }
 
     private int checkPoint(Point point) {
-        return won(point, gameField.getField(), 1, 0, color) + won(point, gameField.getField(), 0, 1, color) + won(point, gameField.getField(), 1, 1, color);
+        char revColor = getRevertedColor(color);
+        return (int)((won(point, gameField.getField(), 1, 0, color) + won(point, gameField.getField(), 0, 1, color) + won(point, gameField.getField(), 1, 1, color)) + 
+                (won(point, gameField.getField(), 1, 0, revColor) + won(point, gameField.getField(), 0, 1, revColor) + won(point, gameField.getField(), 1, 1, revColor)) / 2d);
+    }
+    
+    private char getRevertedColor(char color) {
+        switch (color) {
+            case 'X':
+                return 'O';
+            case 'O':
+                return 'X';
+            default:
+                return '_';
+        }
     }
 
     private int getMaxIndex(List<Integer> availableScores) {
