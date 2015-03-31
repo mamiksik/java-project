@@ -17,7 +17,7 @@ public class NewSolver implements IGameSolver {
     IGameField gameField;
     Point move;
     char color;
-    private final int winLength = 3;
+    private final int winLength = 5;
 
     public NewSolver(IGameField gameField, char color) {
         this.gameField = gameField;
