@@ -69,6 +69,24 @@ public class NewSolver implements IGameSolver {
         return len;
     }
 
+    private int getFreeLength(Point startPosition, char[][] board, int xm, int ym, char player) {
+        return getFreeLen(startPosition, board, xm, ym, player) + getFreeLen(startPosition, board, -xm, -ym, player) + 1;
+    }
+
+    private int getFreeLen(Point startPosition, char[][] board, int xm, int ym, char player) {
+        int x = startPosition.x + xm, y = startPosition.y + ym, len = 0;
+        while (x >= 0 && y >= 0 && x < board.length && y < board[x].length) {
+            if (board[x][y] == player || board[x][y] == '_') {
+                len++;
+            } else {
+                break;
+            }
+            x += xm;
+            y += ym;
+        }
+        return len;
+    }
+
     private List<Point> getAvailableStates() {
         List<Point> availablePoints = new ArrayList<>();
         char[][] board = gameField.getField();
@@ -125,33 +143,57 @@ public class NewSolver implements IGameSolver {
         float stateConstant = 0;
         char revColor = getRevertedColor(color);
 
-        if (getLineLength(point, gameField.getField(), 1, 0, revColor) >= winLength - 1 || getLineLength(point, gameField.getField(), 0, 1, revColor) >= winLength - 1
-                || getLineLength(point, gameField.getField(), 1, 1, revColor) >= winLength - 1 || getLineLength(point, gameField.getField(), -1, 1, revColor) >= winLength - 1) {
+        if ((getLineLength(point, gameField.getField(), 1, 0, revColor) >= winLength - 1 && getFreeLength(point, gameField.getField(), 1, 0, revColor) >= winLength)
+                || (getLineLength(point, gameField.getField(), 0, 1, revColor) >= winLength - 1 && getFreeLength(point, gameField.getField(), 0, 1, revColor) >= winLength)
+                || (getLineLength(point, gameField.getField(), 1, 1, revColor) >= winLength - 1 && getFreeLength(point, gameField.getField(), 1, 1, revColor) >= winLength)
+                || (getLineLength(point, gameField.getField(), -1, 1, revColor) >= winLength - 1 && getFreeLength(point, gameField.getField(), -1, 1, revColor) >= winLength)) {
             stateConstant = Float.MAX_VALUE / 2f;
         }
-        
+
         if (getLineLength(point, gameField.getField(), 1, 0, revColor) >= winLength || getLineLength(point, gameField.getField(), 0, 1, revColor) >= winLength
                 || getLineLength(point, gameField.getField(), 1, 1, revColor) >= winLength || getLineLength(point, gameField.getField(), -1, 1, revColor) >= winLength) {
             stateConstant = Float.MAX_VALUE / 1.5f;
         }
-        
+
         if (getLineLength(point, gameField.getField(), 1, 0, color) >= winLength || getLineLength(point, gameField.getField(), 0, 1, color) >= winLength
                 || getLineLength(point, gameField.getField(), 1, 1, color) >= winLength || getLineLength(point, gameField.getField(), -1, 1, color) >= winLength) {
             stateConstant = Float.MAX_VALUE / 1.2f;
         }
 
         List<Float> lengths = new ArrayList<>();
-        lengths.add((float) getLineLength(point, gameField.getField(), 1, 0, color));
-        lengths.add((float) getLineLength(point, gameField.getField(), 0, 1, color));
-        lengths.add((float) getLineLength(point, gameField.getField(), 1, 1, color));
-        lengths.add((float) getLineLength(point, gameField.getField(), -1, 1, color));
+        if (getFreeLength(point, gameField.getField(), 1, 0, color) >= winLength) {
+            lengths.add((float) getLineLength(point, gameField.getField(), 1, 0, color));
+        }
+        if (getFreeLength(point, gameField.getField(), 0, 1, color) >= winLength) {
+            lengths.add((float) getLineLength(point, gameField.getField(), 0, 1, color));
+        }
+        if (getFreeLength(point, gameField.getField(), 1, 1, color) >= winLength) {
+            lengths.add((float) getLineLength(point, gameField.getField(), 1, 1, color));
+        }
+        if (getFreeLength(point, gameField.getField(), -1, 1, color) >= winLength) {
+            lengths.add((float) getLineLength(point, gameField.getField(), -1, 1, color));
+        }
+        if (lengths.size() < 1) {
+            lengths.add(0.5f);
+        }
         int index = getMaxIndex(lengths);
 
         List<Float> revLengths = new ArrayList<>();
-        revLengths.add((float) getLineLength(point, gameField.getField(), 1, 0, revColor));
-        revLengths.add((float) getLineLength(point, gameField.getField(), 0, 1, revColor));
-        revLengths.add((float) getLineLength(point, gameField.getField(), 1, 1, revColor));
-        revLengths.add((float) getLineLength(point, gameField.getField(), -1, 1, revColor));
+        if (getFreeLength(point, gameField.getField(), 1, 0, revColor) >= winLength) {
+            revLengths.add((float) getLineLength(point, gameField.getField(), 1, 0, revColor));
+        }
+        if (getFreeLength(point, gameField.getField(), 0, 1, revColor) >= winLength) {
+            revLengths.add((float) getLineLength(point, gameField.getField(), 0, 1, revColor));
+        }
+        if (getFreeLength(point, gameField.getField(), 1, 1, revColor) >= winLength) {
+            revLengths.add((float) getLineLength(point, gameField.getField(), 1, 1, revColor));
+        }
+        if (getFreeLength(point, gameField.getField(), -1, 1, revColor) >= winLength) {
+            revLengths.add((float) getLineLength(point, gameField.getField(), -1, 1, revColor));
+        }
+        if (revLengths.size() < 1) {
+            revLengths.add(0.5f);
+        }
         int revIndex = getMaxIndex(revLengths);
 
         return stateConstant + lengths.get(index) + (revLengths.get(revIndex) / (float) winLength);
