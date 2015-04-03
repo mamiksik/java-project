@@ -17,5 +17,13 @@ public interface IGamePlayer {
 
     public int getTurnIndex();
 
-    public boolean playTurn() throws IOException;
+    public IGameField getGameField();
+
+    public IGameSolver getGameSolver();
+
+    public void playTurn() throws IOException, Exception;
+
+    public Point solveTurn() throws IOException, Exception;
+
+    public void playTurn(Point point) throws IOException, Exception;
 }

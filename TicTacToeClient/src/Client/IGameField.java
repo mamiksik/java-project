@@ -14,16 +14,18 @@ import java.io.IOException;
 public interface IGameField {
 
     public char[][] getField();
-    
-    public int[][] getIntField();
 
-    public void fetchField() throws IOException;
+    public int[][] getIntField();
 
     public char getArea(int x, int y);
 
     public int getSize();
+    
+    public void fetchField() throws IOException;
+    
+    public void setArea(int x, int y, char toSet);
 
     public void printField();
-    
+
     public boolean isFullFree();
 }

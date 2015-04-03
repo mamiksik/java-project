@@ -3,13 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Client;
+package TerminalGame;
 
+import Client.PointsAndScores;
+import Client.Point;
+import Client.IGameField;
+import Client.IGameSolver;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ *Warning: OBSOLETE!!!
  * @author anty
  */
 public class OldSolver implements IGameSolver {
@@ -192,12 +196,14 @@ public class OldSolver implements IGameSolver {
     }
 
     @Override
-    public boolean solve() {
+    public void solve() throws Exception {
         computersMove = null;
         minimaxV2(0, 1);
-        return computersMove != null;
+        if (computersMove == null) {
+            throw new Exception("[ERROR] while solving next turn");
+        }
     }
-    
+
     private int minimaxV2(int depth, int turn) {
         //System.out.println("Depth: " + depth + ", Turn: " + turn);
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="375.0" prefWidth="585.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FXGame.FXMLDocumentController">
+    <children>
+        <Label fx:id="label" layoutX="126" layoutY="120" minHeight="16" minWidth="69" />
+      <Button fx:id="buttonConnect" layoutX="14.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleButtonConnectAction" text="Connect" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
+      <Button fx:id="buttonDisconnect" disable="true" layoutX="95.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleButtonDisconnectAction" text="Disconnect" AnchorPane.leftAnchor="95.0" AnchorPane.topAnchor="65.0" />
+      <CheckBox fx:id="checkBoxAutoPlay" layoutX="179.0" layoutY="37.0" mnemonicParsing="false" selected="true" text="Auto play" AnchorPane.leftAnchor="180.0" AnchorPane.topAnchor="40.0" />
+      <Button fx:id="buttonPlay" disable="true" layoutX="200.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleButtonPlayAction" text="Play" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="65.0" />
+      <Label layoutX="14.0" layoutY="14.0" text="IP adress:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
+      <Label layoutX="14.0" layoutY="39.0" text="Port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0" />
+      <TextArea fx:id="textAreaGame" editable="false" layoutX="12.0" layoutY="95.0" prefHeight="195.0" prefWidth="254.0" text="_ _ _ _ _ _ _ _ _ _&#10;X X X X X X X X X X&#10;O O O O O O O O O O&#10;_ _ _ _ _ _ _ _ _ _&#10;X X X X X X X X X X&#10;O O O O O O O O O O&#10;_ _ _ _ _ _ _ _ _ _&#10;X X X X X X X X X X&#10;O O O O O O O O O O&#10;_ _ _ _ _ _ _ _ _ _" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="95.0">
+         <font>
+            <Font name="Tlwg Typewriter Bold" size="13.0" />
+         </font></TextArea>
+      <TextField fx:id="textFieldIP" layoutX="86.0" layoutY="9.0" text="127.0.0.1" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="10.0" />
+      <TextField fx:id="textFieldPort" layoutX="54.0" layoutY="34.0" prefHeight="25.0" prefWidth="114.0" text="3248" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="35.0" />
+      <TextArea fx:id="textAreaLogger" layoutX="275.0" layoutY="9.0" prefHeight="278.0" prefWidth="238.0" text="Please wait..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="275.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+         <font>
+            <Font name="Droid Sans" size="14.0" />
+         </font></TextArea>
+    </children>
+</AnchorPane>

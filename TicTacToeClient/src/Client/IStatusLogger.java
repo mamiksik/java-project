@@ -9,16 +9,11 @@ package Client;
  *
  * @author anty
  */
-public interface IGameSolver {
+public interface IStatusLogger {
 
-    public boolean isGameOver();
+    public void clearText();
 
-    public boolean hasWon(char player);
+    public void writeText(String text);
 
-    public void setGameField(IGameField gameField);
-
-    public Point getBestMove();
-
-    public void solve() throws Exception;
-
+    public void writeTable(String text);
 }

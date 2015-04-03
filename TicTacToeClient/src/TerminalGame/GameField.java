@@ -3,20 +3,26 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Client;
+package TerminalGame;
 
+import Client.IClient;
+import Client.IGameField;
+import Client.IStatusLogger;
 import java.io.IOException;
 
 /**
  * @author Martin
  */
 public final class GameField implements IGameField {
-    int size;
-    Client client;
-    char[][] field;
-    char color;
 
-    public GameField(Client client) throws IOException {
+    private int size;
+    private final IClient client;
+    private final char[][] field;
+    private char color;
+    private final IStatusLogger statusLogger;
+
+    public GameField(IClient client, IStatusLogger statusLogger) throws IOException {
+        this.statusLogger = statusLogger;
         this.client = client;
         size = client.getSize();
         color = client.getColor();
@@ -37,26 +43,6 @@ public final class GameField implements IGameField {
     @Override
     public int getSize() {
         return size;
-    }
-
-    @Override
-    public void fetchField() throws IOException {
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                field[x][y] = client.getGrid(x, y);
-            }
-        }
-        printField();
-    }
-
-    @Override
-    public void printField() {
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                System.out.print(field[y][x] + " ");
-            }
-            System.out.println();
-        }
     }
 
     @Override
@@ -89,6 +75,27 @@ public final class GameField implements IGameField {
     }
 
     @Override
+    public void fetchField() throws IOException {
+        size = client.getSize();
+        color = client.getColor();
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                field[x][y] = client.getGrid(x, y);
+            }
+        }
+    }
+    
+    @Override
+    public void setArea(int x, int y, char toSet) {
+        field[x][y] = toSet;
+    }
+    
+    @Override
+    public void printField() {
+        statusLogger.writeTable(toString());
+    }
+    
+    @Override
     public boolean isFullFree() {
         for (char[] fieldx : field) {
             for (char fieldy : fieldx) {
@@ -98,6 +105,18 @@ public final class GameField implements IGameField {
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                builder.append(field[j][i]).append(" ");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
     }
 
 }
