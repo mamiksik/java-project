@@ -8,6 +8,7 @@ package TerminalGame;
 import Client.IClient;
 import Client.IGameField;
 import Client.IStatusLogger;
+import Client.Point;
 import java.io.IOException;
 
 /**
@@ -17,9 +18,10 @@ public final class GameField implements IGameField {
 
     private int size;
     private final IClient client;
-    private final char[][] field;
+    private char[][] field;
     private char color;
     private final IStatusLogger statusLogger;
+    private Point lastX = new Point(-1, -1), lastO = new Point(-1, -1);
 
     public GameField(IClient client, IStatusLogger statusLogger) throws IOException {
         this.statusLogger = statusLogger;
@@ -80,21 +82,40 @@ public final class GameField implements IGameField {
         color = client.getColor();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                field[x][y] = client.getGrid(x, y);
+                char newCH = client.getGrid(x, y);
+                if (field[x][y] != newCH) {
+                    switch (newCH) {
+                        case 'X':
+                            lastX = new Point(x, y);
+                            break;
+                        case 'O':
+                            lastO = new Point(x, y);
+                            break;
+                    }
+                    field[x][y] = newCH;
+                }
             }
         }
     }
-    
+
     @Override
     public void setArea(int x, int y, char toSet) {
+        switch (toSet) {
+            case 'X':
+                lastX = new Point(x, y);
+                break;
+            case 'O':
+                lastO = new Point(x, y);
+                break;
+        }
         field[x][y] = toSet;
     }
-    
+
     @Override
     public void printField() {
         statusLogger.writeTable(toString());
     }
-    
+
     @Override
     public boolean isFullFree() {
         for (char[] fieldx : field) {
@@ -110,9 +131,13 @@ public final class GameField implements IGameField {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                builder.append(field[j][i]).append(" ");
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                if ((x == lastX.x && y == lastX.y) || (x == lastO.x && y == lastO.y)) {
+                    builder.append(field[x][y]).append("<");
+                } else {
+                    builder.append(field[x][y]).append(" ");
+                }
             }
             builder.append("\n");
         }

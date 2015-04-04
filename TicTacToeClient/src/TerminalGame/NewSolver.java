@@ -32,7 +32,7 @@ public class NewSolver implements IGameSolver {
 
     @Override
     public boolean isGameOver() {
-        return (hasWon('X') || hasWon('O') || getAvailableStates().isEmpty());
+        return (hasWon('X') || hasWon('O') || getPlaces('_').isEmpty());
     }
 
     @Override
@@ -87,12 +87,12 @@ public class NewSolver implements IGameSolver {
         return len;
     }
 
-    private List<Point> getAvailableStates() {
+    private List<Point> getPlaces(char player) {
         List<Point> availablePoints = new ArrayList<>();
         char[][] board = gameField.getField();
         for (int x = 0; x < board.length; ++x) {
             for (int y = 0; y < board[x].length; ++y) {
-                if (board[x][y] == '_') {
+                if (board[x][y] == player) {
                     availablePoints.add(new Point(x, y));
                 }
             }
@@ -129,7 +129,7 @@ public class NewSolver implements IGameSolver {
     }
 
     private Point checkAllStates() {
-        List<Point> availablePoints = getAvailableStates();
+        List<Point> availablePoints = getPlaces('_');
         List<Float> availableScores = new ArrayList<>();
         for (Point anAvailablePoint : availablePoints) {
             availableScores.add(checkPoint(anAvailablePoint));
@@ -161,42 +161,45 @@ public class NewSolver implements IGameSolver {
         }
 
         List<Float> lengths = new ArrayList<>();
-        if (getFreeLength(point, gameField.getField(), 1, 0, color) >= winLength) {
-            lengths.add((float) getLineLength(point, gameField.getField(), 1, 0, color));
-        }
-        if (getFreeLength(point, gameField.getField(), 0, 1, color) >= winLength) {
-            lengths.add((float) getLineLength(point, gameField.getField(), 0, 1, color));
-        }
-        if (getFreeLength(point, gameField.getField(), 1, 1, color) >= winLength) {
-            lengths.add((float) getLineLength(point, gameField.getField(), 1, 1, color));
-        }
-        if (getFreeLength(point, gameField.getField(), -1, 1, color) >= winLength) {
-            lengths.add((float) getLineLength(point, gameField.getField(), -1, 1, color));
-        }
-        if (lengths.size() < 1) {
-            lengths.add(0.5f);
-        }
+        lengths.add(getFreeLength(point, gameField.getField(), 1, 0, color) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 1, 0, color)
+                : (float) getLineLength(point, gameField.getField(), 1, 0, color) / (float) winLength);
+
+        lengths.add(getFreeLength(point, gameField.getField(), 0, 1, color) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 0, 1, color)
+                : (float) getLineLength(point, gameField.getField(), 0, 1, color) / (float) winLength);
+
+        lengths.add(getFreeLength(point, gameField.getField(), 1, 1, color) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 1, 1, color)
+                : (float) getLineLength(point, gameField.getField(), 1, 1, color) / (float) winLength);
+
+        lengths.add(getFreeLength(point, gameField.getField(), -1, 1, color) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), -1, 1, color)
+                : (float) getLineLength(point, gameField.getField(), -1, 1, color) / (float) winLength);
+
         int index = getMaxIndex(lengths);
 
         List<Float> revLengths = new ArrayList<>();
-        if (getFreeLength(point, gameField.getField(), 1, 0, revColor) >= winLength) {
-            revLengths.add((float) getLineLength(point, gameField.getField(), 1, 0, revColor));
-        }
-        if (getFreeLength(point, gameField.getField(), 0, 1, revColor) >= winLength) {
-            revLengths.add((float) getLineLength(point, gameField.getField(), 0, 1, revColor));
-        }
-        if (getFreeLength(point, gameField.getField(), 1, 1, revColor) >= winLength) {
-            revLengths.add((float) getLineLength(point, gameField.getField(), 1, 1, revColor));
-        }
-        if (getFreeLength(point, gameField.getField(), -1, 1, revColor) >= winLength) {
-            revLengths.add((float) getLineLength(point, gameField.getField(), -1, 1, revColor));
-        }
-        if (revLengths.size() < 1) {
-            revLengths.add(0.5f);
-        }
-        int revIndex = getMaxIndex(revLengths);
+        revLengths.add(getFreeLength(point, gameField.getField(), 1, 0, revColor) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 1, 0, revColor)
+                : (float) getLineLength(point, gameField.getField(), 1, 0, revColor) / (float) winLength);
 
-        return stateConstant + lengths.get(index) + (revLengths.get(revIndex) / (float) winLength);
+        revLengths.add(getFreeLength(point, gameField.getField(), 0, 1, revColor) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 0, 1, revColor)
+                : (float) getLineLength(point, gameField.getField(), 0, 1, revColor) / (float) winLength);
+
+        revLengths.add(getFreeLength(point, gameField.getField(), 1, 1, revColor) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), 1, 1, revColor)
+                : (float) getLineLength(point, gameField.getField(), 1, 1, revColor) / (float) winLength);
+
+        revLengths.add(getFreeLength(point, gameField.getField(), -1, 1, revColor) >= winLength
+                ? (float) getLineLength(point, gameField.getField(), -1, 1, revColor)
+                : (float) getLineLength(point, gameField.getField(), -1, 1, revColor) / (float) winLength);
+
+        int revIndex = getMaxIndex(revLengths);
+        float revPrum = getPrum(revLengths);
+
+        return stateConstant + lengths.get(index) + (revLengths.get(revIndex) / (float) winLength) + ((revPrum / (float) winLength) / 10f);
     }
 
     private char getRevertedColor(char color) {
@@ -233,5 +236,13 @@ public class NewSolver implements IGameSolver {
             }
         }
         return index;
+    }
+    
+    private float getPrum(List<Float> list) {
+        int full = 0;
+        for (Float listNum : list) {
+            full += listNum;
+        }
+        return full / (float) list.size();
     }
 }

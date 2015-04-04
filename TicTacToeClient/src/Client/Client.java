@@ -54,7 +54,7 @@ public class Client implements IClient {
     public State getStatus() throws IOException {
         outToServer.writeBytes("STATUS" + "\n");
         String response = inFromServer.readLine();
-        //System.out.println(response);
+        System.out.println(response);
         if (response.equals("DEFEAT")) {
             return State.DEFEAT;
         }
@@ -74,7 +74,7 @@ public class Client implements IClient {
     public int getSize() throws IOException {
         outToServer.writeBytes("SIZE" + "\n");
         String response = inFromServer.readLine();
-        //System.out.println(response);
+        System.out.println(response);
         return Integer.parseInt(response);
     }
 
@@ -82,7 +82,7 @@ public class Client implements IClient {
     public char getColor() throws IOException {
         outToServer.writeBytes("COLOR" + "\n");
         String response = inFromServer.readLine();
-        //System.out.println(response);
+        System.out.println(response);
         return response.charAt(0);
     }
 
@@ -90,7 +90,7 @@ public class Client implements IClient {
     public char getGrid(int x, int y) throws IOException {
         outToServer.writeBytes("GRID " + x + " " + y + "\n");
         String response = inFromServer.readLine();
-        //System.out.println(response);
+        System.out.print(response + " ");
         return response.charAt(0);
     }
 

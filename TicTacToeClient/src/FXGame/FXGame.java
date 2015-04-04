@@ -6,6 +6,7 @@
 package FXGame;
 
 import Client.Client;
+import Client.ClientSimulator;
 import Client.IClient;
 import Client.IGamePlayer;
 import Client.IStatusLogger;
@@ -144,6 +145,7 @@ public class FXGame extends Thread {
         } catch (IOException ex) {
             statusLogger.writeText("[ERROR] while disconnecting: " + ex.getMessage());
         }
+        gamePlayer = null;
         statusLogger.writeText("disconnected");
     }
 
