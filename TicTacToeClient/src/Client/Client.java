@@ -87,17 +87,17 @@ public class Client implements IClient {
     }
 
     @Override
-    public char getGrid(int x, int y) throws IOException {
-        outToServer.writeBytes("GRID " + x + " " + y + "\n");
+    public char getGrid(Point point) throws IOException {
+        outToServer.writeBytes("GRID " + point.x + " " + point.y + "\n");
         String response = inFromServer.readLine();
         System.out.print(response + " ");
         return response.charAt(0);
     }
 
     @Override
-    public int play(int x, int y) throws IOException {
-        System.out.println(x + ", " + y);
-        outToServer.writeBytes("PLAY " + x + " " + y + "\n");
+    public int play(Point point) throws IOException {
+        System.out.println(point.x + ", " + point.y);
+        outToServer.writeBytes("PLAY " + point.x + " " + point.y + "\n");
         String response = inFromServer.readLine();
         System.out.println(response);
         return Integer.parseInt(response);

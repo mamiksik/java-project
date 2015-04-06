@@ -79,23 +79,21 @@ public interface IClient {
     /**
      * dotaz na symbol na pozici v poli
      *
-     * @param x
-     * @param y
+     * @param point
      * @return 'X', 'Y', nebo '_' pro prázdné místo, může vrátit jinou hodnotu v
      * případě chyby
      * @throws IOException
      */
-    public char getGrid(int x, int y) throws IOException;
+    public char getGrid(Point point) throws IOException;
 
     /**
      * požadavek na zahrání na konkrétní souřadnice
      *
-     * @param x
-     * @param y
+     * @param point
      * @return 0 v případě úspěchu, méně jak 0 v případě chyby -1 = špatné
      * pořadí (má hrát druhý hráč) -2 = špatné souřadnice, mimo rozsah mřížky -3
      * = špatné souřadnice, již hrané pole
      * @throws IOException
      */
-    public int play(int x, int y) throws IOException;
+    public int play(Point point) throws IOException;
 }

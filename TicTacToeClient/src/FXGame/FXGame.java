@@ -6,7 +6,7 @@
 package FXGame;
 
 import Client.Client;
-import Client.ClientSimulator;
+//import Client.ClientSimulator;
 import Client.IClient;
 import Client.IGamePlayer;
 import Client.IStatusLogger;
@@ -60,14 +60,14 @@ public class FXGame extends Thread {
                         waitPlay = true;
                         controler.buttonPlay.setDisable(false);
                         while (run && waitPlay) {
-                            gamePlayer.getGameField().setArea(move.x, move.y, gamePlayer.getColor());
+                            gamePlayer.getGameField().setArea(move, gamePlayer.getColor());
                             refreshTextAreaGame();
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
                                 statusLogger.writeText("[ERROR] in ThreadSleep: " + ex.getMessage());
                             }
-                            gamePlayer.getGameField().setArea(move.x, move.y, '_');
+                            gamePlayer.getGameField().setArea(move, '_');
                             refreshTextAreaGame();
                             try {
                                 Thread.sleep(100);

@@ -38,8 +38,8 @@ public final class GameField implements IGameField {
     }
 
     @Override
-    public char getArea(int x, int y) {
-        return field[x][y];
+    public char getArea(Point point) {
+        return field[point.x][point.y];
     }
 
     @Override
@@ -82,7 +82,7 @@ public final class GameField implements IGameField {
         color = client.getColor();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
-                char newCH = client.getGrid(x, y);
+                char newCH = client.getGrid(new Point(x, y));
                 if (field[x][y] != newCH) {
                     switch (newCH) {
                         case 'X':
@@ -99,16 +99,16 @@ public final class GameField implements IGameField {
     }
 
     @Override
-    public void setArea(int x, int y, char toSet) {
+    public void setArea(Point point, char toSet) {
         switch (toSet) {
             case 'X':
-                lastX = new Point(x, y);
+                lastX = point;
                 break;
             case 'O':
-                lastO = new Point(x, y);
+                lastO = point;
                 break;
         }
-        field[x][y] = toSet;
+        field[point.x][point.y] = toSet;
     }
 
     @Override

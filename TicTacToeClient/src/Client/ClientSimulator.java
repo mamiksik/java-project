@@ -25,7 +25,6 @@
 package Client;
 
 import java.io.*;
-import java.util.ArrayList;
 /**
  *
  * @author LukeMcNemee
@@ -89,17 +88,17 @@ public class ClientSimulator implements IClient {
     }
 
     @Override
-    public char getGrid(int x, int y) throws IOException{
-        char response = gird[x][y];
+    public char getGrid(Point point) throws IOException{
+        char response = gird[point.x][point.y];
         System.out.println(response);
         return response;
     }
 
     @Override
-    public int play(int x, int y) throws IOException {
+    public int play(Point point) throws IOException {
         int response = -2;
-        if (gird[x][y] == '_') {
-            gird[x][y] = color;
+        if (gird[point.x][point.y] == '_') {
+            gird[point.x][point.y] = color;
             response = 0;
         } else
             response = -3;

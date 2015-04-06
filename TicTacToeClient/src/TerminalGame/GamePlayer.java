@@ -50,10 +50,10 @@ public class GamePlayer implements IGamePlayer {
         Point bestMove = solver.getBestMove();
 
         statusLogger.writeText("    Playing...");
-        if (client.play(bestMove.x, bestMove.y) < 0) {
+        if (client.play(bestMove) < 0) {
             throw new Exception("[ERROR] while sending next turn");
         }
-        gameField.setArea(bestMove.x, bestMove.y, color);
+        gameField.setArea(bestMove, color);
         gameField.printField();
     }
 
@@ -73,10 +73,10 @@ public class GamePlayer implements IGamePlayer {
     @Override
     public void playTurn(Point point) throws Exception {
         statusLogger.writeText("PLAYING...");
-        if (client.play(point.x, point.y) < 0) {
+        if (client.play(point) < 0) {
             throw new Exception("[ERROR] while sending next turn");
         }
-        gameField.setArea(point.x, point.y, color);
+        gameField.setArea(point, color);
         turnIndex++;
     }
 
