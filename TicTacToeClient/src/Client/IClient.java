@@ -36,19 +36,17 @@ public interface IClient {
      *
      * @param IP adresa (127.0.0.1 pokud server běží na stejném počítači)
      * @param port (předem domluvená hodnota, ideálně v rozsahu 1000+ )
-     * @return 0
      * @throws IOException pokud není možné navázat spojení (server neběží nebo
      * již nemá volné místo atd.)
      */
-    public int connect(String IP, int port) throws IOException;
+    public void connect(String IP, int port) throws IOException;
 
     /**
      * ukončí existující spojení
      *
-     * @return 0
      * @throws IOException
      */
-    public int disconnect() throws IOException;
+    public void disconnect() throws IOException;
 
     /**
      * dotaz na server, jaký je stav, buď hra skončila, poté vrací výsledek,

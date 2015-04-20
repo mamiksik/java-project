@@ -38,18 +38,18 @@ public class GamePlayer implements IGamePlayer {
     @Override
     public void playTurn() throws IOException, Exception {
         turnIndex++;
-        statusLogger.writeText("PLAYING: ");
-        statusLogger.writeText("    Fatching...");
+        statusLogger.write("PLAYING: ");
+        statusLogger.write("    Fatching...");
         gameField.fetchField();
         gameField.printField();
 
-        statusLogger.writeText("    Solving...");
+        statusLogger.write("    Solving...");
         solver.solve();
 
-        statusLogger.writeText("    Getting best move...");
+        statusLogger.write("    Getting best move...");
         Point bestMove = solver.getBestMove();
 
-        statusLogger.writeText("    Playing...");
+        statusLogger.write("    Playing...");
         if (client.play(bestMove) < 0) {
             throw new Exception("[ERROR] while sending next turn");
         }
@@ -59,20 +59,20 @@ public class GamePlayer implements IGamePlayer {
 
     @Override
     public Point solveTurn() throws IOException, Exception {
-        statusLogger.writeText("SOLVING: ");
-        statusLogger.writeText("    Fatching...");
+        statusLogger.write("SOLVING: ");
+        statusLogger.write("    Fatching...");
         gameField.fetchField();
 
-        statusLogger.writeText("    Solving...");
+        statusLogger.write("    Solving...");
         solver.solve();
 
-        statusLogger.writeText("    Getting best move...");
+        statusLogger.write("    Getting best move...");
         return solver.getBestMove();
     }
 
     @Override
     public void playTurn(Point point) throws Exception {
-        statusLogger.writeText("PLAYING...");
+        statusLogger.write("PLAYING...");
         if (client.play(point) < 0) {
             throw new Exception("[ERROR] while sending next turn");
         }

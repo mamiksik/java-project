@@ -37,17 +37,15 @@ public class Client implements IClient {
     private BufferedReader inFromServer;
 
     @Override
-    public int connect(String IP, int port) throws IOException {
+    public void connect(String IP, int port) throws IOException {
         clientSocket = new Socket(IP, port);
         outToServer = new DataOutputStream(clientSocket.getOutputStream());
         inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-        return 0;
     }
 
     @Override
-    public int disconnect() throws IOException {
+    public void disconnect() throws IOException {
         clientSocket.close();
-        return 0;
     }
 
     @Override

@@ -35,9 +35,8 @@ public class ClientSimulator implements IClient {
     char[][] gird;
     
     @Override
-    public int connect(String IP, int port)  throws IOException {
+    public void connect(String IP, int port)  throws IOException {
         createGird();
-        return 0;
     }
     
     private void createGird() {
@@ -50,8 +49,8 @@ public class ClientSimulator implements IClient {
     }
 
     @Override
-    public int disconnect()throws IOException{
-        return 0;
+    public void disconnect()throws IOException{
+        
     }
 
     @Override

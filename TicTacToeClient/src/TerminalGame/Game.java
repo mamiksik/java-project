@@ -25,15 +25,15 @@ public class Game implements Closeable {
 
     public Game(String ip, int port, IStatusLogger statusLogger) throws IOException {
         this.statusLogger = statusLogger;
-        statusLogger.writeText("STARTING game:");
-        statusLogger.writeText("    Loading CLIENT...");
+        statusLogger.write("STARTING game:");
+        statusLogger.write("    Loading CLIENT...");
         client = new Client();
-        statusLogger.writeText("    CONNECTING...");
+        statusLogger.write("    CONNECTING...");
         client.connect("127.0.0.1", 3248);
-        statusLogger.writeText("    Loading GAME_PLAYER...");
+        statusLogger.write("    Loading GAME_PLAYER...");
         gamePlayer = new GamePlayer(client, statusLogger);
-        statusLogger.writeText("    Secesfully STARTED");
-        statusLogger.writeText("My color is: " + gamePlayer.getColor());
+        statusLogger.write("    Secesfully STARTED");
+        statusLogger.write("My color is: " + gamePlayer.getColor());
     }
 
     public void run() throws IOException, InterruptedException {
@@ -51,12 +51,12 @@ public class Game implements Closeable {
                 }
             } else {
                 if (first) {
-                    statusLogger.writeText("waiting...");
+                    statusLogger.write("waiting...");
                     first = false;
                 }
             }
         }
-        statusLogger.writeText("I am " + (status == State.WIN ? "WINNER" : "LOOSER"));
+        statusLogger.write("I am " + (status == State.WIN ? "WINNER" : "LOOSER"));
     }
 
     public State getStatus() throws IOException {

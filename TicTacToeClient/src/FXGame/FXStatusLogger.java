@@ -20,16 +20,16 @@ public class FXStatusLogger implements IStatusLogger {
         this.log = log;
         this.table = table;
         log.clear();
-        writeText("Logging STARTED");
+        write("Logging STARTED");
     }
 
     @Override
-    public void clearText() {
+    public void clear() {
         log.setText("");
     }
 
     @Override
-    public void writeText(String text) {
+    public void write(String text) {
         log.setText(text + "\n" + log.getText());
     }
 

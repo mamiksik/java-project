@@ -38,25 +38,33 @@ public class FXGame extends Thread {
     @Override
     public void run() {
         run = true;
-        boolean first = true;
+        int first = 0;
         connectGame();
         while (run) {
             try {
                 switch (client.getStatus()) {
                     case WAIT:
-                        if (first) {
-                            statusLogger.writeText("waiting...");
-                            first = false;
+                        switch (first) {
+                            case 0:
+                                statusLogger.writeln("WAITING");
+                                break;
+                            case 6:
+                                statusLogger.reWriteln("WAITING");
+                                first = 0;
+                                break;
+                            default:
+                                statusLogger.write(".");
+                                break;
                         }
                         break;
                     case PLAY:
-                        first = true;
+                        first = 0;
                         if (controler.checkBoxAutoPlay.isSelected()) {
                             playTurn();
                             break;
                         }
                         move = gamePlayer.solveTurn();
-                        statusLogger.writeText("redy to play on: " + move.toString());
+                        statusLogger.write("redy to play on: " + move.toString());
                         waitPlay = true;
                         controler.buttonPlay.setDisable(false);
                         while (run && waitPlay) {
@@ -65,14 +73,14 @@ public class FXGame extends Thread {
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                statusLogger.writeText("[ERROR] in ThreadSleep: " + ex.getMessage());
+                                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
                             }
                             gamePlayer.getGameField().setArea(move, '_');
                             refreshTextAreaGame();
                             try {
                                 Thread.sleep(100);
                             } catch (InterruptedException ex) {
-                                statusLogger.writeText("[ERROR] in ThreadSleep: " + ex.getMessage());
+                                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
                             }
                         }
                         waitPlay = false;
@@ -81,26 +89,26 @@ public class FXGame extends Thread {
                         }
                         break;
                     case WIN:
-                        first = true;
+                        first = 0;
                         disconnect();
-                        statusLogger.writeText("you are WINNER");
+                        statusLogger.write("you are WINNER");
                         break;
                     case DEFEAT:
-                        first = true;
+                        first = 0;
                         disconnect();
-                        statusLogger.writeText("you are LOOSER");
+                        statusLogger.write("you are LOOSER");
                         break;
                 }
             } catch (IOException ex) {
-                statusLogger.writeText("[ERROR] while running: " + ex.getMessage());
+                statusLogger.write("[ERROR] while running: " + ex.getMessage());
                 break;
             } catch (Exception ex) {
-                statusLogger.writeText(ex.getMessage());
+                statusLogger.write(ex.getMessage());
             }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                statusLogger.writeText("[ERROR] in ThreadSleep: " + ex.getMessage());
+                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
             }
         }
         run = false;
@@ -117,17 +125,17 @@ public class FXGame extends Thread {
 
     private void connectGame() {
         try {
-            statusLogger.writeText("STARTING game:");
-            statusLogger.writeText("    Loading CLIENT...");
+            statusLogger.write("STARTING game:");
+            statusLogger.write("    Loading CLIENT...");
             client = new Client();
-            statusLogger.writeText("    CONNECTING...");
+            statusLogger.write("    CONNECTING...");
             client.connect(ip, port);
-            statusLogger.writeText("    Loading GAME_PLAYER...");
+            statusLogger.write("    Loading GAME_PLAYER...");
             gamePlayer = new GamePlayer(client, statusLogger);
-            statusLogger.writeText("    Secesfully STARTED");
+            statusLogger.write("    Secesfully STARTED");
             refreshTextAreaGame();
         } catch (IOException ex) {
-            statusLogger.writeText("[ERROR] while connecting: " + ex.getMessage());
+            statusLogger.write("[ERROR] while connecting: " + ex.getMessage());
         }
     }
 
@@ -139,14 +147,14 @@ public class FXGame extends Thread {
     }
 
     private void disconnectGame() {
-        statusLogger.writeText("disconnecting");
+        statusLogger.write("disconnecting");
         try {
             client.disconnect();
         } catch (IOException ex) {
-            statusLogger.writeText("[ERROR] while disconnecting: " + ex.getMessage());
+            statusLogger.write("[ERROR] while disconnecting: " + ex.getMessage());
         }
         gamePlayer = null;
-        statusLogger.writeText("disconnected");
+        statusLogger.write("disconnected");
     }
 
     public void play() {
@@ -156,7 +164,7 @@ public class FXGame extends Thread {
 
     private void playTurn() {
         try {
-            statusLogger.writeText("playing");
+            statusLogger.write("playing");
             refreshTextAreaGame();
             if (move == null) {
                 gamePlayer.playTurn(gamePlayer.solveTurn());
@@ -165,11 +173,11 @@ public class FXGame extends Thread {
                 move = null;
             }
             refreshTextAreaGame();
-            statusLogger.writeText("played");
+            statusLogger.write("played");
         } catch (IOException ex) {
-            statusLogger.writeText("[ERROR] while playing: " + ex.getMessage());
+            statusLogger.write("[ERROR] while playing: " + ex.getMessage());
         } catch (Exception ex) {
-            statusLogger.writeText(ex.getMessage());
+            statusLogger.write(ex.getMessage());
         }
     }
 

@@ -25,12 +25,6 @@ public interface IGameSolver {
     public boolean hasWon(char player);
 
     /**
-     *Slouží ke změně třídy herního pole v solveru
-     * @param gameField herní pole ke změně
-     */
-    public void setGameField(IGameField gameField);
-
-    /**
      *Vrací pozici dalšího tahu, nejprve je třeba zavolat solve
      * @return position for next best move
      */

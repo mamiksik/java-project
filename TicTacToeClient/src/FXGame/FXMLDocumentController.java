@@ -32,12 +32,15 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonConnectAction(ActionEvent event) {
+        fxGame = new FXGame(new Controller(buttonConnect, buttonDisconnect, buttonPlay, checkBoxAutoPlay), statusLogger);
         fxGame.connect(textFieldIP.getText(), Integer.parseInt(textFieldPort.getText()));
     }
 
     @FXML
     private void handleButtonDisconnectAction(ActionEvent event) {
-        fxGame.disconnect();
+        if (fxGame != null) {
+            fxGame.disconnect();
+        }
     }
 
     @FXML
@@ -48,7 +51,6 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         statusLogger = new FXStatusLogger(textAreaLogger, textAreaGame);
-        fxGame = new FXGame(new Controller(buttonConnect, buttonDisconnect, buttonPlay, checkBoxAutoPlay),statusLogger);
     }
 
 }

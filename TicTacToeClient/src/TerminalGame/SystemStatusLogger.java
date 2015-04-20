@@ -14,12 +14,12 @@ import Client.IStatusLogger;
 public class SystemStatusLogger implements IStatusLogger {
 
     @Override
-    public void clearText() {
+    public void clear() {
         throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void writeText(String text) {
+    public void write(String text) {
         System.out.println(text);
     }
 
