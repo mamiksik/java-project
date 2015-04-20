@@ -6,7 +6,7 @@ import java.io.IOException;
  *
  * @author LukeMcNemee
  */
-public class FakeClient implements Client {
+public class FakeClient implements IClient {
 
     private char color;
     private int size;
@@ -25,15 +25,13 @@ public class FakeClient implements Client {
     }
 
     @Override
-    public int connect(String IP, int port) throws IOException {
+    public void connect(String IP, int port) throws IOException {
         System.out.println("Connected");
-        return 0;
     }
 
     @Override
-    public int disconnect() throws IOException {
+    public void disconnect() throws IOException {
         System.out.println("Disconnected");
-        return 0;
     }
 
     @Override
@@ -52,7 +50,8 @@ public class FakeClient implements Client {
     }
 
     @Override
-    public char getGrid(int x, int y) throws IOException {
+    public char getGrid(Point point) throws IOException {
+        int x = point.x, y = point.y;
         if (x >= size || y >= size || x < 0 || y < 0) {
             System.err.println("Wrong coordinates, out of grid");
             return '0';
@@ -61,8 +60,14 @@ public class FakeClient implements Client {
     }
 
     @Override
-    public String play(int x, int y) throws IOException {
-
+    public int play(Point point) throws IOException {
+        if (play2(point) == "played") 
+            return 0;
+        return -1;
+    }
+    
+    public String play2(Point point) throws IOException {
+        int x = point.x, y = point.y;
         if (x >= size || y >= size || x < 0 || y < 0) {
             System.err.println("Wrong coordinates, out of grid");
             return "Wrong coordinates, out of grid";

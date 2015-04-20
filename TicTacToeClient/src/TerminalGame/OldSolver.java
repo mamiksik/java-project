@@ -263,9 +263,4 @@ public class OldSolver implements IGameSolver {
         }
         return turn == 1 ? max : min;
     }
-
-    @Override
-    public void setGameField(IGameField gameField) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

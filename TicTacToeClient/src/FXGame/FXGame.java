@@ -38,27 +38,19 @@ public class FXGame extends Thread {
     @Override
     public void run() {
         run = true;
-        int first = 0;
+        boolean first = true;
         connectGame();
         while (run) {
             try {
                 switch (client.getStatus()) {
                     case WAIT:
-                        switch (first) {
-                            case 0:
-                                statusLogger.writeln("WAITING");
-                                break;
-                            case 6:
-                                statusLogger.reWriteln("WAITING");
-                                first = 0;
-                                break;
-                            default:
-                                statusLogger.write(".");
-                                break;
+                        if (first) {
+                            statusLogger.write("waiting...");
+                            first = false;
                         }
                         break;
                     case PLAY:
-                        first = 0;
+                        first = true;
                         if (controler.checkBoxAutoPlay.isSelected()) {
                             playTurn();
                             break;
@@ -89,12 +81,12 @@ public class FXGame extends Thread {
                         }
                         break;
                     case WIN:
-                        first = 0;
+                        first = true;
                         disconnect();
                         statusLogger.write("you are WINNER");
                         break;
                     case DEFEAT:
-                        first = 0;
+                        first = true;
                         disconnect();
                         statusLogger.write("you are LOOSER");
                         break;
