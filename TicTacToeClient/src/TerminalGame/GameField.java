@@ -156,11 +156,11 @@ public final class GameField implements IGameField {
         for (int i = 0; i < size; i++) {
             if (i > 99) {
                 builder.append("++");
-                break;
+                continue;
             }
             if (i > 9) {
                 builder.append(i);
-                break;
+                continue;
             }
             builder.append(i).append(" ");
         }
@@ -168,13 +168,14 @@ public final class GameField implements IGameField {
         for (int y = 0; y < size; y++) {
             if (y > 99) {
                 builder.append("++");
-                break;
+            } else {
+                if (y > 9) {
+                    builder.append(y);
+                    break;
+                } else {
+                    builder.append(y).append(" ");
+                }
             }
-            if (y > 9) {
-                builder.append(y);
-                break;
-            }
-            builder.append(y).append(" ");
             for (int x = 0; x < size; x++) {
                 if ((x == lastX.getX() && y == lastX.getY()) || (x == lastO.getX() && y == lastO.getY())) {
                     builder.append(field[x][y]).append("<");
