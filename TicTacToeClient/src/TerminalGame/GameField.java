@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package TerminalGame;
 
 import Client.IClient;
@@ -10,15 +5,17 @@ import Client.IGameField;
 import Client.IStatusLogger;
 import Client.Point;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author Martin
+ * @author Anty
  */
 public final class GameField implements IGameField {
 
     private int size;
     private final IClient client;
-    private char[][] field;
+    private final char[][] field;
     private char color;
     private final IStatusLogger statusLogger;
     private Point lastX = new Point(-1, -1), lastO = new Point(-1, -1);
@@ -29,26 +26,26 @@ public final class GameField implements IGameField {
         size = client.getSize();
         color = client.getColor();
         field = new char[size][size];
-        fetchField();
+        fetchField(true);
     }
 
     @Override
-    public char[][] getField() {
+    public synchronized char[][] getField() {
         return field;
     }
 
     @Override
-    public char getArea(Point point) {
-        return field[point.x][point.y];
+    public synchronized char getArea(Point point) {
+        return field[point.getX()][point.getY()];
     }
 
     @Override
-    public int getSize() {
+    public synchronized int getSize() {
         return size;
     }
 
     @Override
-    public int[][] getIntField() {
+    public synchronized int[][] getIntField() {
         int[][] intField = new int[size][size];
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -77,24 +74,48 @@ public final class GameField implements IGameField {
     }
 
     @Override
-    public void fetchField() throws IOException {
+    public synchronized List<Point> getPlaces(char player) {
+        List<Point> availablePoints = new ArrayList<>();
+        for (int y = 0; y < field.length; y++) {
+            for (int x = 0; x < field[y].length; x++) {
+                if (field[x][y] == player) {
+                    availablePoints.add(new Point(x, y));
+                }
+            }
+        }
+        return availablePoints;
+    }
+
+    @Override
+    public void fetchField(boolean writeProgress) throws IOException {
+        if (writeProgress) {
+            statusLogger.writeln("    Fetching: 0%");
+        }
         size = client.getSize();
         color = client.getColor();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 char newCH = client.getGrid(new Point(x, y));
-                if (field[x][y] != newCH) {
-                    switch (newCH) {
-                        case 'X':
-                            lastX = new Point(x, y);
-                            break;
-                        case 'O':
-                            lastO = new Point(x, y);
-                            break;
+                synchronized (this) {
+                    if (field[x][y] != newCH) {
+                        switch (newCH) {
+                            case 'X':
+                                lastX = new Point(x, y);
+                                break;
+                            case 'O':
+                                lastO = new Point(x, y);
+                                break;
+                        }
+                        field[x][y] = newCH;
                     }
-                    field[x][y] = newCH;
+                }
+                if (writeProgress) {
+                    statusLogger.reWriteln("    Fetching: " + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 100f) + "%");
                 }
             }
+        }
+        if (writeProgress) {
+            statusLogger.reWriteln("    Fetched");
         }
     }
 
@@ -108,7 +129,7 @@ public final class GameField implements IGameField {
                 lastO = point;
                 break;
         }
-        field[point.x][point.y] = toSet;
+        field[point.getX()][point.getY()] = toSet;
     }
 
     @Override
@@ -131,9 +152,31 @@ public final class GameField implements IGameField {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append("  ");
+        for (int i = 0; i < size; i++) {
+            if (i > 99) {
+                builder.append("++");
+                break;
+            }
+            if (i > 9) {
+                builder.append(i);
+                break;
+            }
+            builder.append(i).append(" ");
+        }
+        builder.append("\n");
         for (int y = 0; y < size; y++) {
+            if (y > 99) {
+                builder.append("++");
+                break;
+            }
+            if (y > 9) {
+                builder.append(y);
+                break;
+            }
+            builder.append(y).append(" ");
             for (int x = 0; x < size; x++) {
-                if ((x == lastX.x && y == lastX.y) || (x == lastO.x && y == lastO.y)) {
+                if ((x == lastX.getX() && y == lastX.getY()) || (x == lastO.getX() && y == lastO.getY())) {
                     builder.append(field[x][y]).append("<");
                 } else {
                     builder.append(field[x][y]).append(" ");

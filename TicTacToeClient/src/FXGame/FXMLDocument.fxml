@@ -21,7 +21,7 @@
             <Font name="Tlwg Typewriter Bold" size="13.0" />
          </font></TextArea>
       <TextField fx:id="textFieldIP" layoutX="86.0" layoutY="9.0" prefHeight="25.0" prefWidth="255.0" text="127.0.0.1" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="10.0" />
-      <TextField fx:id="textFieldPort" layoutX="54.0" layoutY="34.0" prefHeight="25.0" prefWidth="170.0" text="3248" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="35.0" />
+      <TextField fx:id="textFieldPort" layoutX="54.0" layoutY="34.0" prefHeight="25.0" prefWidth="170.0" text="13248" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="35.0" />
       <TextArea fx:id="textAreaLogger" layoutX="275.0" layoutY="9.0" prefHeight="278.0" prefWidth="238.0" text="Please wait..." AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <font>
             <Font name="Droid Sans" size="14.0" />

@@ -27,7 +27,7 @@ public class FXGame extends Thread {
     private boolean run = false, waitPlay = true;
     private Point move = null;
     private String ip = "127.0.0.1";
-    private int port = 3248;
+    private int port = 13248;
 
     public FXGame(Controller controller, IStatusLogger statusLogger) {
         this.controler = controller;
@@ -38,42 +38,43 @@ public class FXGame extends Thread {
     @Override
     public void run() {
         run = true;
-        boolean first = true;
+        int first = 0;
         connectGame();
         while (run) {
             try {
                 switch (client.getStatus()) {
                     case WAIT:
-                        if (first) {
-                            statusLogger.write("waiting...");
-                            first = false;
+                        switch (first) {
+                            case 0:
+                                statusLogger.writeln("WAITING");
+                                break;
+                            case 6:
+                                statusLogger.reWriteln("WAITING");
+                                first = 0;
+                                break;
+                            default:
+                                statusLogger.write(".");
+                                break;
                         }
+                        first++;
                         break;
                     case PLAY:
-                        first = true;
+                        first = 0;
                         if (controler.checkBoxAutoPlay.isSelected()) {
                             playTurn();
                             break;
                         }
                         move = gamePlayer.solveTurn();
-                        statusLogger.write("redy to play on: " + move.toString());
+                        statusLogger.writeln("redy to play on: " + move.toString());
                         waitPlay = true;
                         controler.buttonPlay.setDisable(false);
                         while (run && waitPlay) {
                             gamePlayer.getGameField().setArea(move, gamePlayer.getColor());
                             refreshTextAreaGame();
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException ex) {
-                                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
-                            }
+                            sleep();
                             gamePlayer.getGameField().setArea(move, '_');
                             refreshTextAreaGame();
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException ex) {
-                                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
-                            }
+                            sleep();
                         }
                         waitPlay = false;
                         if (run) {
@@ -81,33 +82,29 @@ public class FXGame extends Thread {
                         }
                         break;
                     case WIN:
-                        first = true;
+                        first = 0;
                         disconnect();
-                        statusLogger.write("you are WINNER");
+                        statusLogger.writeln("you are WINNER");
                         break;
                     case DEFEAT:
-                        first = true;
+                        first = 0;
                         disconnect();
-                        statusLogger.write("you are LOOSER");
+                        statusLogger.writeln("you are LOOSER");
                         break;
                 }
             } catch (IOException ex) {
-                statusLogger.write("[ERROR] while running: " + ex.getMessage());
+                statusLogger.writeln("[ERROR] while running -> " + ex.getMessage());
                 break;
             } catch (Exception ex) {
-                statusLogger.write(ex.getMessage());
+                statusLogger.writeln(ex.getMessage());
             }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                statusLogger.write("[ERROR] in ThreadSleep: " + ex.getMessage());
-            }
+            sleep();
         }
         run = false;
         disconnectGame();
     }
 
-    public void connect(String ip, int port) {
+    public synchronized void connect(String ip, int port) {
         this.ip = ip;
         this.port = port;
         this.start();
@@ -115,48 +112,48 @@ public class FXGame extends Thread {
         controler.buttonDisconnect.setDisable(false);
     }
 
-    private void connectGame() {
+    private synchronized void connectGame() {
         try {
-            statusLogger.write("STARTING game:");
-            statusLogger.write("    Loading CLIENT...");
+            statusLogger.writeln("STARTING game:");
+            statusLogger.writeln("    Loading CLIENT...");
             client = new Client();
-            statusLogger.write("    CONNECTING...");
+            statusLogger.writeln("    CONNECTING...");
             client.connect(ip, port);
-            statusLogger.write("    Loading GAME_PLAYER...");
+            statusLogger.writeln("    Loading GAME_PLAYER...");
             gamePlayer = new GamePlayer(client, statusLogger);
-            statusLogger.write("    Secesfully STARTED");
+            statusLogger.writeln("    Secesfully STARTED");
             refreshTextAreaGame();
         } catch (IOException ex) {
-            statusLogger.write("[ERROR] while connecting: " + ex.getMessage());
+            statusLogger.writeln("[ERROR] while connecting -> " + ex.getMessage());
         }
     }
 
-    public void disconnect() {
+    public synchronized void disconnect() {
         this.stopRun();
         controler.buttonConnect.setDisable(false);
         controler.buttonDisconnect.setDisable(true);
         controler.buttonPlay.setDisable(true);
     }
 
-    private void disconnectGame() {
-        statusLogger.write("disconnecting");
+    private synchronized void disconnectGame() {
+        statusLogger.writeln("disconnecting");
         try {
             client.disconnect();
         } catch (IOException ex) {
-            statusLogger.write("[ERROR] while disconnecting: " + ex.getMessage());
+            statusLogger.writeln("[ERROR] while disconnecting -> " + ex.getMessage());
         }
         gamePlayer = null;
-        statusLogger.write("disconnected");
+        statusLogger.writeln("disconnected");
     }
 
-    public void play() {
+    public synchronized void play() {
         waitPlay = false;
         controler.buttonPlay.setDisable(true);
     }
 
     private void playTurn() {
         try {
-            statusLogger.write("playing");
+            statusLogger.writeln("playing");
             refreshTextAreaGame();
             if (move == null) {
                 gamePlayer.playTurn(gamePlayer.solveTurn());
@@ -165,19 +162,28 @@ public class FXGame extends Thread {
                 move = null;
             }
             refreshTextAreaGame();
-            statusLogger.write("played");
+            statusLogger.writeln("played");
         } catch (IOException ex) {
-            statusLogger.write("[ERROR] while playing: " + ex.getMessage());
+            statusLogger.writeln("[ERROR] while playing -> " + ex.getMessage());
         } catch (Exception ex) {
-            statusLogger.write(ex.getMessage());
+            statusLogger.writeln(ex.getMessage());
         }
     }
 
-    private void refreshTextAreaGame() {
+    private synchronized void refreshTextAreaGame() {
         statusLogger.writeTable(gamePlayer.toString());
     }
 
-    public void stopRun() {
+    private void sleep() {
+        yield();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ex) {
+            statusLogger.writeln("[ERROR] in ThreadSleep -> " + ex.getMessage());
+        }
+    }
+
+    public synchronized void stopRun() {
         run = false;
     }
 }

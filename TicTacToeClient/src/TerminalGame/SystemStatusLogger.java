@@ -15,16 +15,26 @@ public class SystemStatusLogger implements IStatusLogger {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void write(String text) {
+    public void writeln(String text) {
         System.out.println(text);
     }
 
     @Override
     public void writeTable(String text) {
         System.out.println(text);
+    }
+
+    @Override
+    public void reWriteln(String text) {
+        System.out.println(text);
+    }
+
+    @Override
+    public void write(String text) {
+        System.out.print(text);
     }
 }

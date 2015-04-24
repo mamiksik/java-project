@@ -86,7 +86,7 @@ public class Client implements IClient {
 
     @Override
     public char getGrid(Point point) throws IOException {
-        outToServer.writeBytes("GRID " + point.x + " " + point.y + "\n");
+        outToServer.writeBytes("GRID " + point.getX() + " " + point.getY() + "\n");
         String response = inFromServer.readLine();
         System.out.print(response + " ");
         return response.charAt(0);
@@ -94,8 +94,8 @@ public class Client implements IClient {
 
     @Override
     public int play(Point point) throws IOException {
-        System.out.println(point.x + ", " + point.y);
-        outToServer.writeBytes("PLAY " + point.x + " " + point.y + "\n");
+        System.out.println(point);
+        outToServer.writeBytes("PLAY " + point.getX() + " " + point.getY() + "\n");
         String response = inFromServer.readLine();
         System.out.println(response);
         return Integer.parseInt(response);

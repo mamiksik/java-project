@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package TerminalGame;
 
 import Client.IClient;
@@ -15,7 +10,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Martin
+ * @author Anty
  */
 public class GamePlayer implements IGamePlayer {
 
@@ -37,44 +32,43 @@ public class GamePlayer implements IGamePlayer {
 
     @Override
     public void playTurn() throws IOException, Exception {
-        turnIndex++;
-        statusLogger.write("PLAYING: ");
-        statusLogger.write("    Fatching...");
-        gameField.fetchField();
+        statusLogger.writeln("PLAYING: ");
+        statusLogger.writeln("    Fatching...");
+        gameField.fetchField(false);
         gameField.printField();
 
-        statusLogger.write("    Solving...");
+        statusLogger.writeln("    Solving...");
         solver.solve();
 
-        statusLogger.write("    Getting best move...");
+        statusLogger.writeln("    Getting best move...");
         Point bestMove = solver.getBestMove();
 
-        statusLogger.write("    Playing...");
+        statusLogger.writeln("    Sending...");
         if (client.play(bestMove) < 0) {
             throw new Exception("[ERROR] while sending next turn");
         }
         gameField.setArea(bestMove, color);
         gameField.printField();
+        turnIndex++;
     }
 
     @Override
     public Point solveTurn() throws IOException, Exception {
-        statusLogger.write("SOLVING: ");
-        statusLogger.write("    Fatching...");
-        gameField.fetchField();
+        statusLogger.writeln("SOLVING: ");
+        gameField.fetchField(true);
 
-        statusLogger.write("    Solving...");
+        statusLogger.writeln("    Solving...");
         solver.solve();
 
-        statusLogger.write("    Getting best move...");
+        statusLogger.writeln("    Getting best move...");
         return solver.getBestMove();
     }
 
     @Override
     public void playTurn(Point point) throws Exception {
-        statusLogger.write("PLAYING...");
+        statusLogger.writeln("SENDING...");
         if (client.play(point) < 0) {
-            throw new Exception("[ERROR] while sending next turn");
+            throw new Exception("while sending next turn");
         }
         gameField.setArea(point, color);
         turnIndex++;

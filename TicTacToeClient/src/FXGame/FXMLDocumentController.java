@@ -20,6 +20,7 @@ import javafx.scene.control.*;
 public class FXMLDocumentController implements Initializable {
 
     private IStatusLogger statusLogger;
+    private Controller controller;
     private FXGame fxGame;
     @FXML
     private Button buttonConnect, buttonDisconnect, buttonPlay;
@@ -32,7 +33,10 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private void handleButtonConnectAction(ActionEvent event) {
-        fxGame = new FXGame(new Controller(buttonConnect, buttonDisconnect, buttonPlay, checkBoxAutoPlay), statusLogger);
+        if (fxGame != null) {
+            fxGame.disconnect();
+        }
+        fxGame = new FXGame(controller, statusLogger);
         fxGame.connect(textFieldIP.getText(), Integer.parseInt(textFieldPort.getText()));
     }
 
@@ -41,16 +45,21 @@ public class FXMLDocumentController implements Initializable {
         if (fxGame != null) {
             fxGame.disconnect();
         }
+        fxGame = null;
     }
 
     @FXML
     private void handleButtonPlayAction(ActionEvent event) {
-        fxGame.play();
+        if (fxGame != null) {
+            fxGame.play();
+        }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         statusLogger = new FXStatusLogger(textAreaLogger, textAreaGame);
+        statusLogger.writeln("Select CONNECT from menu to START");
+        controller = new Controller(buttonConnect, buttonDisconnect, buttonPlay, checkBoxAutoPlay);
     }
 
 }

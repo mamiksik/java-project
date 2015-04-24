@@ -7,8 +7,8 @@ package TerminalGame;
 
 import Client.PointsAndScores;
 import Client.Point;
-import Client.IGameField;
 import Client.IGameSolver;
+import Client.PointAndScore;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class OldSolver implements IGameSolver {
     }
 
     private boolean won(Point startPosition, int xm, int ym, int player) {
-        if (board[startPosition.x][startPosition.y] != player) {
+        if (board[startPosition.getX()][startPosition.getY()] != player) {
             return false;
         }
         //int len = wonWhile(startPosition, xm, ym, player) + wonWhile(startPosition, -xm, -ym, player) + 1;
@@ -44,7 +44,7 @@ public class OldSolver implements IGameSolver {
     }
 
     private int wonWhile(Point startPosition, int xm, int ym, int player) {
-        int x = startPosition.x + xm, y = startPosition.y + ym, len = 0;
+        int x = startPosition.getX() + xm, y = startPosition.getY() + ym, len = 0;
         while (x >= 0 && y >= 0 && x < board.length && y < board[x].length) {
             if (board[x][y] == player) {
                 len++;
@@ -87,7 +87,7 @@ public class OldSolver implements IGameSolver {
     }
 
     private void placeAMove(Point point, int player) {
-        board[point.x][point.y] = player;   //player = 1 for X, 2 for O
+        board[point.getX()][point.getY()] = player;   //player = 1 for X, 2 for O
     }
 
     private Point returnBestMove() {
@@ -185,7 +185,7 @@ public class OldSolver implements IGameSolver {
                 placeAMove(point, 2);
                 scores.add(depth < maxDepth ? minimax(depth + 1, 1) : 0);
             }
-            board[point.x][point.y] = 0; //Reset this point
+            board[point.getX()][point.getY()] = 0; //Reset this point
         }
         return turn == 1 ? returnMax(scores) : returnMin(scores);
     }
@@ -242,7 +242,7 @@ public class OldSolver implements IGameSolver {
                     }
                 }
                 if (currentScore == 1) {
-                    board[point.x][point.y] = 0;
+                    board[point.getX()][point.getY()] = 0;
                     break;
                 }
                 if (i == pointsAvailable.size() - 1 && max < 0) {
@@ -255,12 +255,22 @@ public class OldSolver implements IGameSolver {
                 int currentScore = minimaxV2(depth + 1, 1);
                 min = Math.min(currentScore, min);
                 if (min == -1) {
-                    board[point.x][point.y] = 0;
+                    board[point.getX()][point.getY()] = 0;
                     break;
                 }
             }
-            board[point.x][point.y] = 0; //Reset this point
+            board[point.getX()][point.getY()] = 0; //Reset this point
         }
         return turn == 1 ? max : min;
+    }
+
+    @Override
+    public PointAndScore[] getMaxPointsAndScores() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public PointAndScore[] getAllPointsAndScores() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -51,7 +51,7 @@ public class FakeClient implements IClient {
 
     @Override
     public char getGrid(Point point) throws IOException {
-        int x = point.x, y = point.y;
+        int x = point.getX(), y = point.getY();
         if (x >= size || y >= size || x < 0 || y < 0) {
             System.err.println("Wrong coordinates, out of grid");
             return '0';
@@ -61,13 +61,14 @@ public class FakeClient implements IClient {
 
     @Override
     public int play(Point point) throws IOException {
-        if (play2(point) == "played") 
+        if (play2(point) == "played") {
             return 0;
+        }
         return -1;
     }
-    
+
     public String play2(Point point) throws IOException {
-        int x = point.x, y = point.y;
+        int x = point.getX(), y = point.getY();
         if (x >= size || y >= size || x < 0 || y < 0) {
             System.err.println("Wrong coordinates, out of grid");
             return "Wrong coordinates, out of grid";
