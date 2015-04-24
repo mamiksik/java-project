@@ -171,7 +171,6 @@ public final class GameField implements IGameField {
             } else {
                 if (y > 9) {
                     builder.append(y);
-                    break;
                 } else {
                     builder.append(y).append(" ");
                 }
