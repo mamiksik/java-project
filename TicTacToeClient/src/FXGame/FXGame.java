@@ -60,26 +60,7 @@ public class FXGame extends Thread {
                         break;
                     case PLAY:
                         first = 0;
-                        if (controler.checkBoxAutoPlay.isSelected()) {
-                            playTurn();
-                            break;
-                        }
-                        move = gamePlayer.solveTurn();
-                        statusLogger.writeln("redy to play on: " + move.toString());
-                        waitPlay = true;
-                        controler.buttonPlay.setDisable(false);
-                        while (run && waitPlay) {
-                            gamePlayer.getGameField().setArea(move, gamePlayer.getColor());
-                            refreshTextAreaGame();
-                            sleep();
-                            gamePlayer.getGameField().setArea(move, '_');
-                            refreshTextAreaGame();
-                            sleep();
-                        }
-                        waitPlay = false;
-                        if (run) {
-                            playTurn();
-                        }
+                        prepareToPlay();
                         break;
                     case WIN:
                         first = 0;
@@ -149,6 +130,27 @@ public class FXGame extends Thread {
     public synchronized void play() {
         waitPlay = false;
         controler.buttonPlay.setDisable(true);
+    }
+
+    private void prepareToPlay() throws Exception {
+        move = gamePlayer.solveTurn();
+        statusLogger.writeln("Redy to play on: " + move.toString());
+        if (!controler.checkBoxAutoPlay.isSelected()) {
+            waitPlay = true;
+            controler.buttonPlay.setDisable(false);
+            while (run && waitPlay) {
+                gamePlayer.getGameField().setArea(move, gamePlayer.getColor());
+                refreshTextAreaGame();
+                sleep();
+                gamePlayer.getGameField().setArea(move, '_');
+                refreshTextAreaGame();
+                sleep();
+            }
+            waitPlay = false;
+        }
+        if (run) {
+            playTurn();
+        }
     }
 
     private void playTurn() {
