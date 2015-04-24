@@ -73,11 +73,9 @@ public class FXGame extends Thread {
                         statusLogger.writeln("you are LOOSER");
                         break;
                 }
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 statusLogger.writeln("[ERROR] while running -> " + ex.getMessage());
                 break;
-            } catch (Exception ex) {
-                statusLogger.writeln(ex.getMessage());
             }
             sleep();
         }
