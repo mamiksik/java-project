@@ -67,8 +67,6 @@ public interface IClient {
     public int getSize() throws IOException;
     
     /**
-     * vrátí velikost mřížky (celková velikost pole n, tedy souřadnice v poli
-     * jsou v rozsahu 0 - (n-1) )
      *
      * @return délka potřebná k výhře
      * @throws IOException
@@ -94,7 +92,7 @@ public interface IClient {
     public char getGrid(Point point) throws IOException;
     
     /**
-     * dotaz na symbol na pozici v poli
+     * dotaz na herní tabulku v podobě char[]
      *
      * @return 'X', 'Y', nebo '_' pro prázdné místo, může vrátit jinou hodnotu v
      * případě chyby

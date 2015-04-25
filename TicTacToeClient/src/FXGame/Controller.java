@@ -15,8 +15,8 @@ import javafx.scene.control.CheckBox;
  */
 public class Controller {
     
-    private Button buttonConnect, buttonDisconnect, buttonPlay;
-    public CheckBox checkBoxAutoPlay;
+    private final Button buttonConnect, buttonDisconnect, buttonPlay;
+    public final CheckBox checkBoxAutoPlay;
     
     public Controller(Button buttonConnect, Button buttonDisconnect, Button buttonPlay, CheckBox checkBoxAutoPlay) {
         this.buttonConnect = buttonConnect;

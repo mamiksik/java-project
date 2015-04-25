@@ -107,6 +107,10 @@ public final class GameField implements IGameField {
 
         if (!tryNewFetch(writeProgress))
             tryOldFetch(writeProgress);
+        
+        if (writeProgress) {
+            statusLogger.reWriteln("    Fetched");
+        }
     }
 
     private boolean tryNewFetch(boolean writeProgress) throws IOException {
@@ -137,14 +141,11 @@ public final class GameField implements IGameField {
                         field[x][y] = newCH;
                     }
                 }
-                //if (writeProgress) {
-                //    statusLogger.reWriteln("    Fetching: " + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 50f + 50f) + "%");
-                //}
+                if (writeProgress) {
+                    statusLogger.reWriteln("    Fetching: "
+                            + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 50f + 50f) + "% " + newCH);
+                }
             }
-        }
-        
-        if (writeProgress) {
-            statusLogger.reWriteln("    Fetched");
         }
         return true;
     }
@@ -167,12 +168,10 @@ public final class GameField implements IGameField {
                     }
                 }
                 if (writeProgress) {
-                    statusLogger.reWriteln("    Fetching: " + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 100f) + "%");
+                    statusLogger.reWriteln("    Fetching: "
+                            + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 100f) + "% " + newCH);
                 }
             }
-        }
-        if (writeProgress) {
-            statusLogger.reWriteln("    Fetched");
         }
     }
 

@@ -265,18 +265,18 @@ public class NewSolver implements IGameSolver {
     private List<PointAndScore> getMaxPointsAndScores(List<PointAndScore> list) {
         List<PointAndScore> maxList = new ArrayList<>();
         maxList.add(list.get(0));
-        for (int i = 0; i < list.size(); i++) {
-            if (Arrays.equals(list.get(i).getScore(), maxList.get(0).getScore())) {
-                maxList.add(list.get(i));
+        for (PointAndScore list1 : list) {
+            if (Arrays.equals(list1.getScore(), maxList.get(0).getScore())) {
+                maxList.add(list1);
                 continue;
             }
             for (int in = 0; in < maxList.get(0).getScore().length; in++) {
-                if (list.get(i).getScore()[in] < maxList.get(0).getScore()[in]) {
+                if (list1.getScore()[in] < maxList.get(0).getScore()[in]) {
                     break;
                 }
-                if (list.get(i).getScore()[in] > maxList.get(0).getScore()[in]) {
+                if (list1.getScore()[in] > maxList.get(0).getScore()[in]) {
                     maxList.clear();
-                    maxList.add(list.get(i));
+                    maxList.add(list1);
                     break;
                 }
             }

@@ -43,9 +43,9 @@ public interface IGameField {
     public int getSize();
     
     /**
-     * Vrátí serverem požadovanou velikost herní mřížky
+     * Vrátí serverem požadovanou délku pro výhru
      *
-     * @return field size
+     * @return win length
      */
     public int getWinLength();
 
