@@ -85,4 +85,14 @@ public class ClientSimulator implements IClient {
         return response;
     }
 
+    @Override
+    public char[] getFullGrid() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int getWinLength() throws IOException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

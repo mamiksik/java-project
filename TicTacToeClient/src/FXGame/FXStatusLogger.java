@@ -6,6 +6,7 @@
 package FXGame;
 
 import Client.IStatusLogger;
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 /**
@@ -50,11 +51,21 @@ public final class FXStatusLogger implements IStatusLogger {
     }
 
     @Override
-    public synchronized void writeTable(String text) {
-        table.setText(text);
+    public synchronized void writeTable(final String text) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                table.setText(text);
+            }
+        });
     }
 
-    private void refresh() {
-        log.setText(logTextLine + "\n" + logText);
+    private synchronized void refresh() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                log.setText(logTextLine + "\n" + logText);
+            }
+        });
     }
 }

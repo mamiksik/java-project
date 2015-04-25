@@ -20,11 +20,12 @@ public class NewSolver implements IGameSolver {
     private Point move = null;
     private List<PointAndScore> maxPointsAndScores = null, allPointsAndScores = null;
     private final char color;
-    private final int winLength = 5;
+    private int winLength;
 
     public NewSolver(IGameField gameField, char color) {
         this.gameField = gameField;
         this.color = color;
+        this.winLength = gameField.getWinLength();
     }
 
     @Override
@@ -101,6 +102,7 @@ public class NewSolver implements IGameSolver {
 
     @Override
     public synchronized void solve() throws Exception {
+        this.winLength = gameField.getWinLength();
         if (isGameOver()) {
             throw new Exception("while solving next turn -> game is over");
         }

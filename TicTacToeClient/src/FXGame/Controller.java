@@ -5,6 +5,7 @@
  */
 package FXGame;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 
@@ -14,13 +15,32 @@ import javafx.scene.control.CheckBox;
  */
 public class Controller {
     
-    public Button buttonConnect, buttonDisconnect, buttonPlay;
+    private Button buttonConnect, buttonDisconnect, buttonPlay;
     public CheckBox checkBoxAutoPlay;
-
+    
     public Controller(Button buttonConnect, Button buttonDisconnect, Button buttonPlay, CheckBox checkBoxAutoPlay) {
         this.buttonConnect = buttonConnect;
         this.buttonDisconnect = buttonDisconnect;
         this.buttonPlay = buttonPlay;
         this.checkBoxAutoPlay = checkBoxAutoPlay;
+    }
+    
+    public void setConnectDisabled(final boolean toSet) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonConnect.setDisable(toSet);
+                buttonDisconnect.setDisable(!toSet);
+            }
+        });
+    }
+    
+    public void setPlayDisabled(final boolean toSet) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonPlay.setDisable(toSet);
+            }
+        });
     }
 }

@@ -77,6 +77,21 @@ public class Client implements IClient {
     }
 
     @Override
+    public int getWinLength() throws IOException {
+        outToServer.writeBytes("WINLENGTH" + "\n");
+        String response = inFromServer.readLine();
+        System.out.println(response);
+        int out;
+        try {
+            out = Integer.parseInt(response);
+        } catch(Throwable e) {
+            System.err.println(e.getMessage());
+            out = 5;
+        }
+        return out;
+    }
+
+    @Override
     public char getColor() throws IOException {
         outToServer.writeBytes("COLOR" + "\n");
         String response = inFromServer.readLine();
@@ -90,6 +105,14 @@ public class Client implements IClient {
         String response = inFromServer.readLine();
         System.out.print(response + " ");
         return response.charAt(0);
+    }
+
+    @Override
+    public char[] getFullGrid() throws IOException {
+        outToServer.writeBytes("FULLGRID\n");
+        String response = inFromServer.readLine();
+        System.out.print(response + " ");
+        return response.toCharArray();
     }
 
     @Override

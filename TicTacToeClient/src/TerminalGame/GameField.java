@@ -15,7 +15,8 @@ public final class GameField implements IGameField {
 
     private int size;
     private final IClient client;
-    private final char[][] field;
+    private char[][] field;
+    private int winLength;
     private char color;
     private final IStatusLogger statusLogger;
     private Point lastX = new Point(-1, -1), lastO = new Point(-1, -1);
@@ -24,6 +25,7 @@ public final class GameField implements IGameField {
         this.statusLogger = statusLogger;
         this.client = client;
         size = client.getSize();
+        winLength = client.getWinLength();
         color = client.getColor();
         field = new char[size][size];
         fetchField(true);
@@ -42,6 +44,11 @@ public final class GameField implements IGameField {
     @Override
     public synchronized int getSize() {
         return size;
+    }
+
+    @Override
+    public int getWinLength() {
+        return winLength;
     }
 
     @Override
@@ -92,9 +99,59 @@ public final class GameField implements IGameField {
             statusLogger.writeln("    Fetching: 0%");
         }
         size = client.getSize();
+        winLength = client.getWinLength();
         color = client.getColor();
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
+        
+        if (size != field.length)
+            field = new char[size][size];
+
+        if (!tryNewFetch(writeProgress))
+            tryOldFetch(writeProgress);
+    }
+
+    private boolean tryNewFetch(boolean writeProgress) throws IOException {
+        char[] grid = client.getFullGrid();
+        if (grid.length != size * size || (grid[0] != '_' && grid[0] != 'X' && grid[0] != 'O')) {
+            return false;
+        }
+        
+        if (writeProgress) {
+            statusLogger.reWriteln("    Fetching: 50%");
+        }
+        
+        int i = 0;
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                char newCH = grid[i];
+                i++;
+                synchronized (this) {
+                    if (field[x][y] != newCH) {
+                        switch (newCH) {
+                            case 'X':
+                                lastX = new Point(x, y);
+                                break;
+                            case 'O':
+                                lastO = new Point(x, y);
+                                break;
+                        }
+                        field[x][y] = newCH;
+                    }
+                }
+                //if (writeProgress) {
+                //    statusLogger.reWriteln("    Fetching: " + (int) ((((float) x + ((float) y / (float) size)) / (float) size) * 50f + 50f) + "%");
+                //}
+            }
+        }
+        
+        if (writeProgress) {
+            statusLogger.reWriteln("    Fetched");
+        }
+        return true;
+    }
+    
+    private void tryOldFetch(boolean writeProgress) throws IOException {
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
                 char newCH = client.getGrid(new Point(x, y));
                 synchronized (this) {
                     if (field[x][y] != newCH) {
