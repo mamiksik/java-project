@@ -146,8 +146,9 @@ public class NewSolver implements IGameSolver {
         int revIndex = getMaxIndex(revLengths);
         float revDiameter = getDiameter(revLengths);
 
-        if (stateConstant[0] != 0f || stateConstant[1] != 0f || stateConstant[2] != 0f || stateConstant[3] != 0f)
+        if (stateConstant[0] != 0f || stateConstant[1] != 0f || stateConstant[2] != 0f || stateConstant[3] != 0f) {
             return new float[]{stateConstant[0], stateConstant[1], stateConstant[2], stateConstant[3], revDiameter, diameter, revLengths.get(revIndex), lengths.get(index)};
+        }
         return new float[]{stateConstant[0], stateConstant[1], stateConstant[2], stateConstant[3], lengths.get(index), revLengths.get(revIndex), diameter, revDiameter};
     }
 

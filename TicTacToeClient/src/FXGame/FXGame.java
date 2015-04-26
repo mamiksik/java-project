@@ -5,12 +5,7 @@
  */
 package FXGame;
 
-import Client.Client;
-//import Client.ClientSimulator;
-import Client.IClient;
-import Client.IGamePlayer;
-import Client.IStatusLogger;
-import Client.Point;
+import Client.*;
 import TerminalGame.GamePlayer;
 import java.io.IOException;
 
@@ -115,6 +110,8 @@ public class FXGame extends Thread {
     private synchronized void disconnectGame() {
         statusLogger.writeln("disconnecting");
         try {
+            gamePlayer.getGameField().fetchField(true);
+            refreshTextAreaGame();
             client.disconnect();
         } catch (IOException ex) {
             statusLogger.writeln("[ERROR] while disconnecting -> " + ex.getMessage());
@@ -130,6 +127,7 @@ public class FXGame extends Thread {
 
     private void prepareToPlay() throws Exception {
         move = gamePlayer.solveTurn();
+        refreshTextAreaGame();
         statusLogger.writeln("Redy to play on: " + move.toString());
         if (!controler.checkBoxAutoPlay.isSelected()) {
             waitPlay = true;
